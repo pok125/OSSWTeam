@@ -54,7 +54,7 @@ int main()
 
 	while (1)
 	{
-		fflush(stdin);
+		getchar();
 		printf("Game window size (16 - 25)\nEnter '0' to use config file values");
 		scanf("%d", &arraySizeX);
 
@@ -112,7 +112,7 @@ int main()
 		{
 			system("cls");
 			printf("During the game- press ESC to exit.. or DIE !\nSpeed level: (1-40)\n");
-			fflush(stdin);
+			getchar();
 			scanf("%d", &Speed);
 			if (Speed > 40) Speed = 40;
 			if (!(Speed <= 0)) break; /* challenging levels up to speed = 30*/
@@ -189,7 +189,7 @@ int main()
 				}
 			}
 		}
-		fflush(stdin);
+		getchar();
 		while (1)
 		{
 			z--;
@@ -358,7 +358,7 @@ int main()
 				Key = 0;
 				while (1) 
 				{
-					fflush(stdin);
+					getchar();
 					if (_kbhit())
 					{
 						Key = _getch();
@@ -374,7 +374,7 @@ int main()
 				if (snakeDir == 4 && CurrentDir == 2) snakeDir = 2;
 				if (snakeDir == 3 && CurrentDir == 1) snakeDir = 1;
 			}
-			fflush(stdin);
+			getchar();
 			CurrentDir = snakeDir;
 			i++;
 		}
@@ -384,7 +384,7 @@ int main()
 			while (1)
 			{
 				printf("U R dead ! Game over\nStart new game? (Y/N and press ENTER)\n");
-				fflush(stdin);
+				getchar();
 				scanf("%c", &newGameChoice);
 				if (newGameChoice == 'n' || newGameChoice == 'N') 
 				{
