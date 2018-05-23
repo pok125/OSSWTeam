@@ -11,6 +11,7 @@
 /*
 Config file:  config.cfg
 content:
+example
 
 arraySizeX					16 // these two values should be equal
 arraySizeY					16 // no bigger than 16
