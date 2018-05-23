@@ -11,7 +11,6 @@
 /*
 Config file:  config.cfg
 content:
-example
 
 arraySizeX					16 // these two values should be equal
 arraySizeY					16 // no bigger than 16
@@ -200,7 +199,7 @@ int main()
 			izqdeGolemiq = 0;
 			CurrentDir = snakeDir;
 
-			/* Create the frame arraySizeX * arraySizeY */
+			/* Create the frame arraySizeX * arraySizeY : xÁÂÇ¥ */ 
 			for (i = 0; i < arraySizeX * arraySizeY; i++)
 			{
 
@@ -232,42 +231,8 @@ int main()
 				newFood = 0;
 			}
 
-			/* Check snake coordinates for food for impact or walls - for food -> increase snake_size +1; - for impact and walls -> Dead = 1 */
-			for (i = 0; i < snakeSize; i++)
-			{
-				/* food check */
-				if ((snakePos[2 * i] == foodPos[0]) && (snakePos[2 * i + 1] == foodPos[1]))
-				{
-					newFood = 1;
-					/* the snake cannot be longer than 25 elements. */
-					if (snakeSize < 50) snakeSize++;
-					izqdeGolemiq = 1;
-					if (INCREASE_SPEED_ON_EVERY_FOOD && (Speed < 40))Speed++;
-				}
-				/* wall check */
-				if (!izqdeGolemiq)
-				{
-					if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
-					{
-						Dead = 1;
-					}
-				}
-				else
-				{
-					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
-					{
-						Dead = 1;
-					}
-				}
-				/* snake self-impact check */
-				if (i != (snakeSize - 1))
-				{
-					if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
-					{
-						Dead = 1;
-					}
-				}
-			}
+			//¸ÔÀÌÃæµ¹ »©³¿
+			CrashCheck(i, snakeSize, snakePos, foodPos);
 
 			/* Calculate new snake depending on the Dir choosed by user. move the array */
 			/* move array - food condition */
@@ -404,4 +369,53 @@ int main()
 	}
 	_getch();
 	return 0;
+}
+
+
+//º®Ãæµ¹ ºÎºÐ »©³»¿È,
+//¾ÆÁ÷ ´Ù ¸ø »©³¿ -05.24
+
+CrashCheck(int i, int snakeSize, int snakePos, int foodPos, int izqdeGolemiq, int speed)
+{
+
+
+/* Check snake coordinates for food for impact or walls - for food -> increase snake_size +1; - for impact and walls -> Dead = 1 */
+	
+	for (i = 0; i < snakeSize; i++)
+	{
+		/* food check */
+		if ((snakePos[2 * i] == foodPos[0]) && (snakePos[2 * i + 1] == foodPos[1]))
+		{
+			newFood = 1;
+			/* the snake cannot be longer than 25 elements. */
+			if (snakeSize < 50) snakeSize++;
+			izqdeGolemiq = 1;
+			if (INCREASE_SPEED_ON_EVERY_FOOD && (Speed < 40))Speed++;
+		}
+		/* wall check */
+		if (!izqdeGolemiq)
+		{
+			if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
+			{
+				Dead = 1;
+			}
+		}
+		else
+		{
+			if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
+			{
+				Dead = 1;
+			}
+		}
+		/* snake self-impact check */
+		if (i != (snakeSize - 1))
+		{
+			if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
+			{
+				Dead = 1;
+			}
+		}
+
+
+
 }
