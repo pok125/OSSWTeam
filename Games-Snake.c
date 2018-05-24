@@ -20,6 +20,14 @@ The config value is opened only if the user choose '0' for the size of the array
 */
 
 
+void gotoxy(int x, int y)
+{
+
+	COORD CursorPosition = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
+
+}
+
 void hidecursor()
 {
 	HANDLE hOut;
@@ -112,6 +120,33 @@ int main()
 
 	for (i = 0; i < arraySizeX * arraySizeY; i++) arr[i] = ' '; //맵 공백 초기화
 																/* Create the frame arraySizeX * arraySizeY */
+
+
+
+
+	gotoxy(42, 11);
+	printf("■■■■■■■");
+	gotoxy(42, 12);
+	printf("■ I T E M  ■");
+	gotoxy(42, 13);
+	printf("■■■■■■■");
+	gotoxy(42, 14);
+	printf("■ 1:       ■");
+	gotoxy(42, 15);
+	printf("■■■■■■■");
+	gotoxy(42, 16);
+	printf("■ 2:       ■");
+	gotoxy(42, 17);
+	printf("■■■■■■■");
+	gotoxy(42, 18);
+	printf("■ 3:       ■");
+	gotoxy(42, 19);
+	printf("■■■■■■■");
+
+
+
+
+
 	for (i = 0; i < arraySizeX * arraySizeY; i++)
 	{
 
