@@ -8,6 +8,34 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
+#include <stdlib.h>
+#include <mmstream.h>
+
+#pragma comment(lib,"winmm.lib")
+
+#define Space 32 //스페이스바의 아스키코드
+/*--------아래 매크로는 텍스트 색깔들을 정의함. ---------*/
+#define COL GetStdHandle(STD_OUTPUT_HANDLE)
+#define RED SetConsoleTextAttribute(COL, 0x000c);
+#define YELLOW SetConsoleTextAttribute(COL, 0x000e);
+#define GREEN SetConsoleTextAttribute(COL, 0x0002);
+#define SKY_BLUE SetConsoleTextAttribute(COL, 0x000b);
+#define BLUE SetConsoleTextAttribute(COL, 0x0001);
+#define PURPLE SetConsoleTextAttribute(COL, 0x000d);
+#define WHITE SetConsoleTextAttribute(COL, 0x000f);
+#define Enter 13
+#define COMMAND_SIZE 256\
+
+int handlecount = 0;
+int startcount = 0;
+void consolesize();
+void ItemScreen();
+void GameMainLoop();
+void gotoxy(int x, int y);
+//void RankScreen();
+//void Story(void);
+
+
 /*
 Config file:  config.cfg
 content:
@@ -19,6 +47,24 @@ IncreaseSpeedOnEveryFood   1
 The config value is opened only if the user choose '0' for the size of the array.
 */
 
+void consolesize() {
+	//char command[COMMAND_SIZE] = { '\0', };
+	//int lines = 30;
+	//int cols = 100;
+	//printf(command, "mode con: lines=%d cols=%d", lines, cols);
+	//system(command);
+
+	system("mode con:cols=100 lines=30");
+
+}
+void TT(void)
+{
+	gotoxy(53, 23);
+	printf(" 김덕영 / 김예지 / 이광호 / 김상훈 / 노형섭");
+	Sleep(3000);
+	gotoxy(53, 23);
+	printf("                                   ");
+}
 
 void gotoxy(int x, int y)
 {
@@ -27,7 +73,6 @@ void gotoxy(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
 
 }
-
 void hidecursor()
 {
 	HANDLE hOut;
@@ -40,8 +85,121 @@ void hidecursor()
 
 	SetConsoleCursorInfo(hOut, &ConCurInf);
 }
+int Menu(void)
+{
 
-int main()
+	const int x = 41;
+	int y = 18;
+	int key;
+	if (startcount == 0) {
+		gotoxy(x, y);
+		printf("▶");
+		printf("게임시작");
+		gotoxy(x, y + 1);
+		printf("  개발자");
+		gotoxy(x, y + 2);
+		printf("  게임종료");
+	}
+
+	while (1)
+	{
+		gotoxy(x, y);
+		printf("");
+		key = _getch();
+		printf(" ");
+		switch (key)
+		{
+		case 72:     //방향키로 바꿔야함
+			if (y > 18) y--;
+			break;
+		case 80:     //얘도
+			if (y < 20) y++;
+			break;
+		case 13:
+		{//이것도 엔터
+			startcount = 1;
+			return y - 18;
+		}
+		}
+		if (handlecount != 1) {
+			gotoxy(x, y);
+			printf("▶");
+		}
+	}
+
+}
+
+void StartMenu()
+{
+	consolesize();
+	int i;
+	int SELECT;
+
+	Sleep(1000);
+	RED
+		printf("                                                                                              \n");
+	printf("                                                                                              \n");
+	printf("      ■■■■     ■             ■        ■■■■■■        ■■■■■ ■       ■■■■      \n");
+	printf("                   ■           ■  ■                ■        ■         ■                     \n");
+	printf("    ■■■■■■   ■         ■      ■              ■        ■■■■   ■■   ■■■■■■    \n");
+	printf("                   ■       ■          ■          ■          ■         ■          ■         \n");
+	printf("       ■■■      ■■■                                       ■■■■■ ■         ■ ■       \n");
+	printf("      ■    ■     ■       ■■■■■■■  ■■■■■■■                                        \n");
+	printf("       ■■■      ■             ■              ■                  ■■■■    ■■■■■■■  \n");
+	printf("                   ■             ■              ■                        ■          ■        \n");
+	printf("                                                                      ■■■■       ■■■■     \n");
+	printf("                                                                      ■                   ■     \n");
+	printf("                                                                      ■■■■       ■■■■     \n");
+	printf("                                                                                     ■           \n");
+	printf("                                                                                     ■■■■     \n");
+	Sleep(500);
+	RED
+
+
+		PURPLE
+		gotoxy(41, 17);
+	printf("┏━━━━━━━━━━┓\n");
+
+	gotoxy(41, 21);
+	printf("┗━━━━━━━━━━┛\n");
+
+	WHITE
+
+		YELLOW
+
+
+		WHITE
+		while (1)
+		{
+			SELECT = Menu();
+			switch (SELECT)
+			{
+			case 0:
+				system("cls");
+				for (i = 3; i > 0; i--)
+				{
+					gotoxy(65, 24);
+					printf("Start in..%d", i);
+					Sleep(1000);
+				}
+				system("cls");
+				handlecount = 1;
+				GameMainLoop();
+				////////////////////////////////////////게임 시작되야되는 부분
+				break;
+			case 1:
+				TT();
+				break;
+			case 2:
+				exit(0);
+				break;
+
+
+			}
+
+		}
+}
+void GameMainLoop()
 {
 	FILE *fp;
 	int NUMBER_OF_CONFIG_ELEMENTS = 5;
@@ -72,20 +230,19 @@ int main()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
 
-					  //while (1)                 //초기 스테이지 크기 설정
-					  //{
-					  //   fflush(stdin);
-					  //   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
-					  //   scanf("%d", &arraySizeX);
+	//while (1)                 //초기 스테이지 크기 설정
+	//{
+	//   fflush(stdin);
+	//   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
+	//   scanf("%d", &arraySizeX);
 
-					  //   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
-					  //}
-					  /*
-					  Speed = 5;
-					  arraySizeY = 20;
-					  arraySizeX = arraySizeY*2;*/
+	//   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
+	//}
+	/*
+	Speed = 5;
+	arraySizeY = 20;
+	arraySizeX = arraySizeY*2;*/
 
 
 	Speed = 5;
@@ -112,7 +269,7 @@ int main()
 	//   fclose(fp);
 	//}
 
-
+	ItemScreen();
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
 	{
@@ -121,35 +278,6 @@ int main()
 
 	for (i = 0; i < arraySizeX * arraySizeY; i++) arr[i] = ' '; //맵 공백 초기화
 																/* Create the frame arraySizeX * arraySizeY */
-
-
-
-	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
-
-	gotoxy(42, 11);
-	printf("■■■■■■■");
-	gotoxy(42, 12);
-	printf("■ I T E M  ■");
-	gotoxy(42, 13);
-	printf("■■■■■■■");
-	gotoxy(42, 14);
-	printf("■ 1:  %d    ■", itemArray[0]); //kdy
-	gotoxy(42, 15);
-	printf("■■■■■■■");
-	gotoxy(42, 16);
-	printf("■ 2:       ■");
-	gotoxy(42, 17);
-	printf("■■■■■■■");
-	gotoxy(42, 18);
-	printf("■ 3:       ■");
-	gotoxy(42, 19);
-	printf("■■■■■■■");
-
-
-
-
-
-
 	for (i = 0; i < arraySizeX * arraySizeY; i++)
 	{
 
@@ -505,6 +633,38 @@ int main()
 		if (NoNewGame);
 
 	}
+}
+
+void ItemScreen()
+{
+	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
+
+	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
+
+	gotoxy(42, 11);
+	printf("■■■■■■■");
+	gotoxy(42, 12);
+	printf("■ I T E M  ■");
+	gotoxy(42, 13);
+	printf("■■■■■■■");
+	gotoxy(42, 14);
+	printf("■ 1:  %d    ■", itemArray[0]); //kdy
+	gotoxy(42, 15);
+	printf("■■■■■■■");
+	gotoxy(42, 16);
+	printf("■ 2:       ■");
+	gotoxy(42, 17);
+	printf("■■■■■■■");
+	gotoxy(42, 18);
+	printf("■ 3:       ■");
+	gotoxy(42, 19);
+	printf("■■■■■■■");
+}
+int main()
+{
+
+	StartMenu();
+
 	_getch();
 	return 0;
 }
