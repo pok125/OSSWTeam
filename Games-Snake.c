@@ -19,6 +19,20 @@ IncreaseSpeedOnEveryFood   1
 The config value is opened only if the user choose '0' for the size of the array.
 */
 
+
+void hidecursor()
+{
+	HANDLE hOut;
+	CONSOLE_CURSOR_INFO ConCurInf;
+
+	hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	ConCurInf.dwSize = 1;
+	ConCurInf.bVisible = FALSE;
+
+	SetConsoleCursorInfo(hOut, &ConCurInf);
+}
+
 int main()
 {
 	FILE *fp;
@@ -59,11 +73,15 @@ int main()
 
 	//   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
 	//}
+	/*
+	Speed = 5;
+	arraySizeY = 20;
+	arraySizeX = arraySizeY*2;*/
+
 
 	Speed = 5;
-	arraySizeX = 20;
-	arraySizeY = arraySizeX;
-
+	arraySizeY = 20;
+	arraySizeX = arraySizeY;
 	//if (arraySizeX == 0)          //디폴트파일 설정 불러오기
 	//{
 	//   ChetemConfig = 1;
@@ -84,6 +102,7 @@ int main()
 	//   }
 	//   fclose(fp);
 	//}
+
 
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
@@ -108,7 +127,6 @@ int main()
 	while (1)
 	{ // new game cycle
 		srand(time(NULL));
-
 		for (j = 0; j < 100; j++) snakePos[j] = 1; //스네이크 포지션 1로 초기화
 		Dead = 0;
 		NoNewGame = 0;
@@ -210,6 +228,7 @@ int main()
 			}
 		}
 		fflush(stdin);
+
 		while (1)
 		{
 			z--;
@@ -342,11 +361,14 @@ int main()
 			/* print the matrix with the snake and the food*/
 			for (i = 0; i < arraySizeX; i++)
 			{
+				void hidecursor();
+
 				for (j = 0; j < arraySizeY; j++)
 				{
 					if (arr[i * arraySizeX + j] == '-')
 					{
-						printf("-");
+						printf("■");
+						//j++;
 					}
 					else if (arr[i * arraySizeX + j] == '|')
 					{
@@ -354,13 +376,16 @@ int main()
 					}
 					else if (arr[i * arraySizeX + j] == ' ')
 					{
-						printf(" ");
+						printf("  ");
 					}
 					else if (arr[i * arraySizeX + j] == '*')
 					{
-						printf("*");
+						printf("●");
 					}
-
+					else if (arr[i * arraySizeX + j] == '+')
+					{
+						printf("♡");
+					}
 					//   printf("%c", arr[i * arraySizeX + j]);
 				}
 				printf("\n");
