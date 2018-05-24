@@ -72,19 +72,20 @@ int main()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
+	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
 
-	//while (1)                 //초기 스테이지 크기 설정
-	//{
-	//   fflush(stdin);
-	//   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
-	//   scanf("%d", &arraySizeX);
+					  //while (1)                 //초기 스테이지 크기 설정
+					  //{
+					  //   fflush(stdin);
+					  //   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
+					  //   scanf("%d", &arraySizeX);
 
-	//   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
-	//}
-	/*
-	Speed = 5;
-	arraySizeY = 20;
-	arraySizeX = arraySizeY*2;*/
+					  //   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
+					  //}
+					  /*
+					  Speed = 5;
+					  arraySizeY = 20;
+					  arraySizeX = arraySizeY*2;*/
 
 
 	Speed = 5;
@@ -123,6 +124,7 @@ int main()
 
 
 
+	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
 
 	gotoxy(42, 11);
 	printf("■■■■■■■");
@@ -131,7 +133,7 @@ int main()
 	gotoxy(42, 13);
 	printf("■■■■■■■");
 	gotoxy(42, 14);
-	printf("■ 1:       ■");
+	printf("■ 1:  %d    ■", itemArray[0]); //kdy
 	gotoxy(42, 15);
 	printf("■■■■■■■");
 	gotoxy(42, 16);
@@ -142,6 +144,7 @@ int main()
 	printf("■ 3:       ■");
 	gotoxy(42, 19);
 	printf("■■■■■■■");
+
 
 
 
