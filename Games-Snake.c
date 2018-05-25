@@ -28,26 +28,14 @@
 
 int handlecount = 0;
 int startcount = 0;
-void consolesize();
-void ItemScreen();
-void GameMainLoop();
-void StoryScreen();
-void Game();
-void gotoxy(int x, int y);
-void Gameover();
+void consolesize();	//콘솔창 크기 조절 함수
+void ItemScreen();	//아이템 출력부
+void GameMainLoop();	//지렁이 게임 메인 진행 함수
+void StoryScreen();	//스토리 진행 함수
+void Game();	//게임 대화창
+void gotoxy(int x, int y);	//xy커서 좌표이동
+void Gameover();	//게임오버시 화면
 
-
-
-/*
-Config file:  config.cfg
-content:
-arraySizeX               16 // these two values should be equal
-arraySizeY               16 // no bigger than 16
-StartingDirection         2  // 0 - random.  1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu
-snakeSize               5  // no longer than 5;
-IncreaseSpeedOnEveryFood   1
-The config value is opened only if the user choose '0' for the size of the array.
-*/
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -400,9 +388,9 @@ void Gameover()
 		char key;
 	gotoxy(34, 13);
 	printf("당신은 죽었습니다.");
-	Sleep(3000);
-	system("cls");
-	gotoxy(30, 12);
+	Sleep(1000);
+	//	system("cls");
+	gotoxy(30, 14);
 	printf("다시하시겠습니까?   Y/N");
 	while (1)
 	{
