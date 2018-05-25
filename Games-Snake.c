@@ -440,6 +440,8 @@ void GameMainLoop()
 	int newFood = 1;
 	int NoNewGame = 0;
 	int foodPos[2];
+	int foodCount = 0; //스테이지 별 먹이 수 제한 
+	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int izqdeGolemiq = 0;
 	int food_testX = 0;
 	int food_testY = 0;
@@ -489,6 +491,9 @@ void GameMainLoop()
 		newFood = 1;
 		snakeDir = 1;
 		Key = 0;
+		stageNum = 1; //임의로 초기화 1탄
+		foodCount = limitFoodByStage(stageNum);
+
 		if (!ChetemConfig) snakeSize = 3;
 		else snakeSize = INITIAL_SNAKE_SIZE;
 		z = 24; /* iterator for game life cycle - used to count moves after food appearence         z는 음식이 사라지기 전 움직일 수 있는 최대값*/
@@ -619,10 +624,20 @@ void GameMainLoop()
 					}
 					if (CheckFoodCoord) break;
 				}
-				foodPos[0] = food_testX;
-				foodPos[1] = food_testY;
+
+				if (foodCount <= 0) {
+					foodPos[0] = 0;
+					foodPos[1] = 0;
+				}
+				else {
+					foodPos[0] = food_testX;
+					foodPos[1] = food_testY;
+				}
+
 				z = arraySizeX * 2;
 				newFood = 0;
+				foodCount--;
+
 			}
 
 			/* Check snake coordinates for food for impact or walls - for food -> increase snake_size +1; - for impact and walls -> Dead = 1 */
@@ -706,7 +721,11 @@ void GameMainLoop()
 			//}
 
 			/* Put the food on the matrix */
-			arr[foodPos[1] * arraySizeX + foodPos[0]] = '+';
+			if (foodPos[0] == 0 && foodPos[1] == 0)
+				arr[foodPos[1] * arraySizeX + foodPos[0]] = '-';
+			else
+				arr[foodPos[1] * arraySizeX + foodPos[0]] = '+';
+
 			//system("cls");
 			pos.X = 0;
 			pos.Y = 0;
@@ -802,7 +821,17 @@ void GameMainLoop()
 
 	}
 }
-
+int limitFoodByStage(int stageNum) {
+	int foodCount;
+	switch (stageNum) {
+	case 1: foodCount = 10; break;
+	case 2: foodCount = 9; break;
+	case 3: foodCount = 8; break;
+	case 4: foodCount = 7; break;
+	case 5: foodCount = 6; break;
+	}
+	return foodCount;
+}
 void ItemScreen()
 {
 	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
