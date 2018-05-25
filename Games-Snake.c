@@ -1,4 +1,4 @@
-#ifdef _MSC_VER
+﻿#ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
@@ -35,7 +35,7 @@ void StoryScreen();	//스토리 진행 함수
 void Game();	//게임 대화창
 void gotoxy(int x, int y);	//xy커서 좌표이동
 void Gameover();	//게임오버시 화면
-
+int limitFoodByStage(int stageNum);
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -430,25 +430,31 @@ void GameMainLoop()
 	int CurrentDir = 0;
 	int direction_snake = 0;
 	int Dead = 0;
-	int i, j, z;
+	int i, j, z, createItem;
 	int Speed;
 	char *arr = NULL;
 	int CheckFoodCoord = 0;
+	int CheckItemCoord = 0;
 	char unused[30];
 	int arraySizeX = 16;
 	int arraySizeY = 16;
 	int newFood = 1;
 	int NoNewGame = 0;
 	int foodPos[2];
+	int itemPos[2];
 	int foodCount = 0; //스테이지 별 먹이 수 제한 
 	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int izqdeGolemiq = 0;
 	int food_testX = 0;
 	int food_testY = 0;
+	int item_testX = 0;
+	int item_testY = 0;
 	int ChetemConfig = 0;
 	int snakePos[100];  //x,y pos for 50 snake elements. If the snake is getting bigger -> malloc for new 10 elements
 	int snakeSize = 3;
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
+	int newItem = 1;
+	int selectItem = 0; // 아이템 생성시 선택된 아이템
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -491,6 +497,7 @@ void GameMainLoop()
 		newFood = 1;
 		snakeDir = 1;
 		Key = 0;
+		createItem = 10;  // 아이템이 사라지기 전 움직일 수 있는 최대값
 		stageNum = 1; //임의로 초기화 1탄
 		foodCount = limitFoodByStage(stageNum);
 
@@ -590,7 +597,9 @@ void GameMainLoop()
 		while (1)
 		{
 			z--;
+			createItem--;
 			if (z == 0) newFood = 1;
+			if (createItem == 0) newItem = 1;
 			/* Clear the screen and print the matrix and snake again */
 			// z가 25번 넘어가면 음식 다시생기게하는 부분
 
@@ -639,6 +648,28 @@ void GameMainLoop()
 				foodCount--;
 
 			}
+			
+			if (newItem)        //아이템 재생성 구간 및 아이템 포지션 설정(뱀과의 위치에서 일정하게 떨어져야지 생성됨)
+
+			{
+				CheckItemCoord = 0;
+				selectItem = rand() % 4; // 아이템 랜덤으로 선택
+				for (;;)
+				{
+					item_testX = 1 + rand() % (arraySizeX - 2);
+					item_testY = 1 + rand() % (arraySizeY - 2);
+					for (i = 0; i < snakeSize; i++)
+					{
+						if ((snakePos[2 * i] != item_testX) && (snakePos[2 * i + 1] != item_testY))
+							CheckItemCoord = 1;
+					}
+					if (CheckItemCoord) break;
+				}
+				itemPos[0] = item_testX;
+				itemPos[1] = item_testY;
+				createItem = 15;
+				newItem = 0;
+			}
 
 			/* Check snake coordinates for food for impact or walls - for food -> increase snake_size +1; - for impact and walls -> Dead = 1 */
 			for (i = 0; i < snakeSize; i++)           //충돌 체크
@@ -651,6 +682,24 @@ void GameMainLoop()
 					if (snakeSize < 50) snakeSize++;                         // 스네이크 길이 증가
 					izqdeGolemiq = 1;
 					if (INCREASE_SPEED_ON_EVERY_FOOD && (Speed < 40))Speed++;
+				}
+				/* 아이템과 충돌시 */
+				if ((snakePos[2 * i] == itemPos[0]) && (snakePos[2 * i + 1] == itemPos[1]))
+				{
+					newItem = 1;
+					izqdeGolemiq = 1;
+					//충돌된 아이템에 따라 부여되는 효과 설정
+					switch(selectItem)
+					{
+						//스피드 증가 아이템
+						case 0:
+						if (Speed < 40) Speed+=2;
+							break;
+						case 1: break;
+						case 2: break;
+						case 3: break;
+					}
+					
 				}
 				/* wall check 벽돌과 충돌시*/
 				if (!izqdeGolemiq)
@@ -725,6 +774,23 @@ void GameMainLoop()
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '-';
 			else
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '+';
+			
+			switch (selectItem)
+			{
+				//스피드 증가 아이템
+			case 0:
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				break;
+			case 1:
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				break;
+			case 2:
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				break;
+			case 3:
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				break;
+			}
 
 			//system("cls");
 			pos.X = 0;
@@ -757,6 +823,10 @@ void GameMainLoop()
 					else if (arr[i * arraySizeX + j] == '+')
 					{
 						printf("♡");
+					}
+					else if (arr[i * arraySizeX + j] == '^')
+					{
+						printf("●");
 					}
 					//   printf("%c", arr[i * arraySizeX + j]);
 				}
