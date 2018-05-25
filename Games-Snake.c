@@ -26,6 +26,7 @@
 #define Enter 13
 #define COMMAND_SIZE 256\
 
+
 int handlecount = 0;
 int startcount = 0;
 void consolesize();	//콘솔창 크기 조절 함수
@@ -36,7 +37,9 @@ void Game();	//게임 대화창
 void gotoxy(int x, int y);	//xy커서 좌표이동
 void Gameover();	//게임오버시 화면
 int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
-void lifeScreen(int lifeCount); //목숨 출력부 
+void lifeScreen(int lifeCount); //목숨 출력부
+void itemInfoScreen(); //아이템 설명 출력 
+void printState(int state); //상태 출력 함수 
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -457,6 +460,7 @@ void GameMainLoop()
 	int foodCount = 0; //스테이지 별 먹이 수 제한 
 	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int lifeCount = 0; //목숨 개수(스테이지별 초기화)
+
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -467,6 +471,7 @@ void GameMainLoop()
 	arraySizeX = arraySizeY;
 
 	ItemScreen();
+	itemInfoScreen();
 
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
@@ -698,7 +703,7 @@ void GameMainLoop()
 					{
 						//스피드 증가 아이템
 					case 0:
-						if (Speed < 40) Speed += 2;
+						if (Speed < 40) Speed += 2; printState(1);
 						break;
 					case 1: break;
 					case 2: break;
@@ -789,6 +794,7 @@ void GameMainLoop()
 				{
 					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
 					{
+
 						lifeCount--;
 						if (lifeCount < 0)
 							Dead = 1;
@@ -993,7 +999,7 @@ void GameMainLoop()
 			{
 				//스피드 증가 아이템
 			case 0:
-				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '&';
 				break;
 			case 1:
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
@@ -1036,7 +1042,11 @@ void GameMainLoop()
 					}
 					else if (arr[i * arraySizeX + j] == '+')
 					{
-						printf("♡");
+						printf("♤");
+					}
+					else if (arr[i * arraySizeX + j] == '&')
+					{
+						printf("△");
 					}
 					else if (arr[i * arraySizeX + j] == '^')
 					{
@@ -1120,9 +1130,9 @@ void lifeScreen(int lifeCount) {
 	switch (lifeCount)
 	{
 	case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
-	case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
-	case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
-	case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
+	case 1: gotoxy(42, 3); printf("■♥■  ■  ■"); break;
+	case 2: gotoxy(42, 3); printf("■♥■♥■  ■"); break;
+	case 3: gotoxy(42, 3); printf("■♥■♥■♥■"); break;
 	default: break;
 	}
 	gotoxy(42, 0);
@@ -1134,6 +1144,32 @@ void lifeScreen(int lifeCount) {
 	gotoxy(42, 4);
 	printf("■■■■■■■");
 
+}
+void itemInfoScreen() {
+	gotoxy(58, 0);
+	printf("♤ : 먹이");
+	gotoxy(58, 1);
+	printf("△ : 스피드 업");
+	gotoxy(58, 2);
+	printf("▽ : 스피드 다운");
+	gotoxy(58, 3);
+	printf("● : 지렁이 길이 +1");
+	gotoxy(58, 4);
+	printf("○ : 지렁이 길이 -1");
+	gotoxy(58, 5);
+	printf("◑ : 먹이 먹을 시 +2");
+	gotoxy(58, 6);
+	printf("★ : 무적");
+}
+void printState(int state) {
+	switch (state)
+	{
+		//case 0: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	case 1: gotoxy(42, 9); printf("스피드가 증가 되었습니다.");  break;
+	case 2: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	case 3: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	default: break;
+	}
 }
 void ItemScreen() {
 	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
