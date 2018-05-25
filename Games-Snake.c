@@ -28,6 +28,25 @@
 
 int handlecount = 0;
 int startcount = 0;
+void consolesize();	//콘솔창 크기 조절 함수
+void ItemScreen();	//아이템 출력부
+void GameMainLoop();	//지렁이 게임 메인 진행 함수
+void StoryScreen();	//스토리 진행 함수
+void Game();	//게임 대화창
+void gotoxy(int x, int y);	//xy커서 좌표이동
+void Gameover();	//게임오버시 화면
+
+
+void consolesize() {
+	//char command[COMMAND_SIZE] = { '\0', };
+	//int lines = 30;
+	//int cols = 100;
+	//printf(command, "mode con: lines=%d cols=%d", lines, cols);
+	//system(command);
+	system("title SewerEscape");   //실행창 이름 바꾸기
+	system("mode con:cols=100 lines=30");
+
+}
 
 void TT(void)
 {
@@ -64,6 +83,14 @@ int Menu(void)
 	int y = 18;
 	int key;
 
+	gotoxy(x, y);
+	printf("▶");
+	printf("게임시작");
+	gotoxy(x, y + 1);
+	printf("  개발자");
+	gotoxy(x, y + 2);
+	printf("  게임종료");
+
 
 	while (1)
 	{
@@ -92,7 +119,43 @@ int Menu(void)
 	}
 
 }
+void Game()
+{
 
+	system("cls");
+
+
+	gotoxy(0, 13);
+	printf("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	gotoxy(0, 14);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 15);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 16);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 17);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 18);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 19);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 20);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 21);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 22);
+	printf("┃                                                                    enter▼ ┃");
+	gotoxy(0, 23);
+	printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+
+}
+void StartMenu()
+{
+	if (startcount == 0) {
+		consolesize();
+	}
+	system("cls");
 	int i;
 	int SELECT;
 
@@ -145,7 +208,7 @@ int Menu(void)
 				}
 				system("cls");
 				handlecount = 1;
-
+				StoryScreen();
 				////////////////////////////////////////게임 시작되야되는 부분
 				break;
 			case 1:
@@ -159,6 +222,200 @@ int Menu(void)
 			}
 
 		}
+}
+void StoryScreen(void)
+{
+	int key;
+	int PrintCount = 0;
+	int roof = 1;
+
+
+	while (roof)
+	{
+		if (PrintCount == 0)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("일어나!\n");;
+			gotoxy(4, 16);
+			printf("일어나 정신이 들어?\n");
+			key = _getch();
+			if (key == 13)
+			{
+				PrintCount++;
+			}
+		}
+		if (PrintCount == 1)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("집으로 돌아가고 싶어?\n");
+			gotoxy(4, 16);
+			printf("돌아가고 싶겠지... \n");
+
+			key = _getch();
+			if (key == 13)
+			{
+				PrintCount++;
+			}
+		}
+		if (PrintCount == 2)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("하수구를 탐험하여 탈출을 해야 살아남을수가 있어!\n");
+			gotoxy(4, 16);
+			printf("할 수 있겠어?\n");
+
+			gotoxy(4, 19);
+			printf("  응  : press Y");
+			gotoxy(4, 20);
+			printf("아니 : press N");
+
+			key = _getch();
+			if (key == 'y' || key == 'Y')
+			{
+				PrintCount = 3;
+			}
+			if (key == 'n' || key == 'N')
+			{
+				PrintCount = 4;
+			}
+		}
+		if (PrintCount == 3)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("좋았어 의지가 충만하군\n");
+			gotoxy(4, 16);
+			printf("미로에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
+			gotoxy(4, 17);
+			printf("그럼 몸 조심해!");
+
+			key = _getch();
+			if (key == 13)
+			{
+				roof = 0;
+			}
+		}
+		if (PrintCount == 4)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("싫다고? 그럼 죽어!\n");
+			Sleep(1000);
+			gotoxy(4, 16);
+			printf("농담이고 싫어도 해야해!\n");
+			Sleep(1000);
+			gotoxy(4, 17);
+			printf("하수구에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
+			Sleep(1000);
+			gotoxy(4, 18);
+			printf("그럼 몸 조심해!");
+
+			key = _getch();
+			if (key == 13)
+			{
+				roof = 0;
+			}
+
+		}
+	}
+
+	handlecount = 2;
+	if (handlecount == 2) {
+
+		system("cls");
+		GameMainLoop();
+	}
+}
+void Gameover()
+{
+	RED
+		gotoxy(0, 0);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	Sleep(1000);
+	WHITE
+		char key;
+	gotoxy(34, 13);
+	printf("당신은 죽었습니다.");
+	Sleep(1000);
+	//	system("cls");
+	gotoxy(30, 14);
+	printf("다시하시겠습니까?   Y/N");
+	while (1)
+	{
+
+		printf("");
+		key = _getch();
+		printf(" ");
+		switch (key)
+		{
+		case 'n':
+			StartMenu();
+			break;
+		case 'N':
+			StartMenu();
+			break;
+		case 'y':
+
+			StartMenu();
+			break;
+		case 'Y':
+			StartMenu();
+			break;
+		}
+	}
+
 }
 
 void GameMainLoop()
