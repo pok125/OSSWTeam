@@ -35,7 +35,8 @@ void StoryScreen();	//스토리 진행 함수
 void Game();	//게임 대화창
 void gotoxy(int x, int y);	//xy커서 좌표이동
 void Gameover();	//게임오버시 화면
-int limitFoodByStage(int stageNum);
+int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
+void lifeScreen(int lifeCount); //목숨 출력부 
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -442,8 +443,6 @@ void GameMainLoop()
 	int NoNewGame = 0;
 	int foodPos[2];
 	int itemPos[2];
-	int foodCount = 0; //스테이지 별 먹이 수 제한 
-	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int izqdeGolemiq = 0;
 	int food_testX = 0;
 	int food_testY = 0;
@@ -455,6 +454,9 @@ void GameMainLoop()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
+	int foodCount = 0; //스테이지 별 먹이 수 제한 
+	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
+	int lifeCount = 0; //목숨 개수(스테이지별 초기화)
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -465,6 +467,7 @@ void GameMainLoop()
 	arraySizeX = arraySizeY;
 
 	ItemScreen();
+
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
 	{
@@ -500,6 +503,8 @@ void GameMainLoop()
 		createItem = 10;  // 아이템이 사라지기 전 움직일 수 있는 최대값
 		stageNum = 1; //임의로 초기화 1탄
 		foodCount = limitFoodByStage(stageNum);
+		lifeCount = 3;
+		lifeScreen(lifeCount);
 
 		if (!ChetemConfig) snakeSize = 3;
 		else snakeSize = INITIAL_SNAKE_SIZE;
@@ -648,7 +653,7 @@ void GameMainLoop()
 				foodCount--;
 
 			}
-			
+
 			if (newItem)        //아이템 재생성 구간 및 아이템 포지션 설정(뱀과의 위치에서 일정하게 떨어져야지 생성됨)
 
 			{
@@ -689,39 +694,248 @@ void GameMainLoop()
 					newItem = 1;
 					izqdeGolemiq = 1;
 					//충돌된 아이템에 따라 부여되는 효과 설정
-					switch(selectItem)
+					switch (selectItem)
 					{
 						//스피드 증가 아이템
-						case 0:
-						if (Speed < 40) Speed+=2;
-							break;
-						case 1: break;
-						case 2: break;
-						case 3: break;
+					case 0:
+						if (Speed < 40) Speed += 2;
+						break;
+					case 1: break;
+					case 2: break;
+					case 3: break;
 					}
-					
+
 				}
 				/* wall check 벽돌과 충돌시*/
 				if (!izqdeGolemiq)
 				{
 					if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
 					{
-						Dead = 1;
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							//뱀 위치 랜덤설정하는 코드 복붙
+							//추후 함수로 빼서 호출하기 
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
 				else
 				{
 					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
 					{
-						Dead = 1;
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
-				/* snake self-impact check */
+				/* snake self-impact check 지렁이가 자신의 몸에 충돌 하는지 검사하는 부분  */
 				if (i != (snakeSize - 1))
 				{
 					if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
 					{
-						Dead = 1;
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
 			}
@@ -774,7 +988,7 @@ void GameMainLoop()
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '-';
 			else
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '+';
-			
+
 			switch (selectItem)
 			{
 				//스피드 증가 아이템
@@ -902,8 +1116,26 @@ int limitFoodByStage(int stageNum) {
 	}
 	return foodCount;
 }
-void ItemScreen()
-{
+void lifeScreen(int lifeCount) {
+	switch (lifeCount)
+	{
+	case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
+	case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
+	case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
+	case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
+	default: break;
+	}
+	gotoxy(42, 0);
+	printf("■■■■■■■");
+	gotoxy(42, 1);
+	printf("■ L I F E  ■");
+	gotoxy(42, 2);
+	printf("■■■■■■■");
+	gotoxy(42, 4);
+	printf("■■■■■■■");
+
+}
+void ItemScreen() {
 	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
 
 	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
