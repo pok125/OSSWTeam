@@ -28,35 +28,7 @@
 
 int handlecount = 0;
 int startcount = 0;
-void consolesize();
-void ItemScreen();
-void GameMainLoop();
-void gotoxy(int x, int y);
-//void RankScreen();
-//void Story(void);
 
-
-/*
-Config file:  config.cfg
-content:
-arraySizeX               16 // these two values should be equal
-arraySizeY               16 // no bigger than 16
-StartingDirection         2  // 0 - random.  1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu
-snakeSize               5  // no longer than 5;
-IncreaseSpeedOnEveryFood   1
-The config value is opened only if the user choose '0' for the size of the array.
-*/
-
-void consolesize() {
-	//char command[COMMAND_SIZE] = { '\0', };
-	//int lines = 30;
-	//int cols = 100;
-	//printf(command, "mode con: lines=%d cols=%d", lines, cols);
-	//system(command);
-
-	system("mode con:cols=100 lines=30");
-
-}
 void TT(void)
 {
 	gotoxy(53, 23);
@@ -91,15 +63,7 @@ int Menu(void)
 	const int x = 41;
 	int y = 18;
 	int key;
-	if (startcount == 0) {
-		gotoxy(x, y);
-		printf("▶");
-		printf("게임시작");
-		gotoxy(x, y + 1);
-		printf("  개발자");
-		gotoxy(x, y + 2);
-		printf("  게임종료");
-	}
+
 
 	while (1)
 	{
@@ -129,9 +93,6 @@ int Menu(void)
 
 }
 
-void StartMenu()
-{
-	consolesize();
 	int i;
 	int SELECT;
 
@@ -184,7 +145,7 @@ void StartMenu()
 				}
 				system("cls");
 				handlecount = 1;
-				GameMainLoop();
+
 				////////////////////////////////////////게임 시작되야되는 부분
 				break;
 			case 1:
@@ -199,9 +160,10 @@ void StartMenu()
 
 		}
 }
+
 void GameMainLoop()
 {
-	FILE *fp;
+
 	int NUMBER_OF_CONFIG_ELEMENTS = 5;
 	int STARTING_DIRECTION = 0;
 	int INITIAL_SNAKE_SIZE = 3;
@@ -231,43 +193,11 @@ void GameMainLoop()
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	//while (1)                 //초기 스테이지 크기 설정
-	//{
-	//   fflush(stdin);
-	//   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
-	//   scanf("%d", &arraySizeX);
-
-	//   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
-	//}
-	/*
-	Speed = 5;
-	arraySizeY = 20;
-	arraySizeX = arraySizeY*2;*/
 
 
 	Speed = 5;
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
-	//if (arraySizeX == 0)          //디폴트파일 설정 불러오기
-	//{
-	//   ChetemConfig = 1;
-	//   fp = fopen("config.cfg", "rt");
-	//   if (fp == NULL)
-	//   {
-	//      printf("Cannot find config file. Check existance or start new game and choose value between 16-25 for window game size\nGame will now exit.");
-	//      _getch();
-	//      return 0;
-	//   }
-	//   for (i = 0; i < NUMBER_OF_CONFIG_ELEMENTS; i++)
-	//   {
-	//      if (i == 0) fscanf(fp, "%s%d", unused, &arraySizeX);
-	//      if (i == 1) fscanf(fp, "%s%d", unused, &arraySizeY);
-	//      if (i == 2) fscanf(fp, "%s%d", unused, &STARTING_DIRECTION);
-	//      if (i == 3) fscanf(fp, "%s%d", unused, &INITIAL_SNAKE_SIZE);
-	//      if (i == 4) fscanf(fp, "%s%d", unused, &INCREASE_SPEED_ON_EVERY_FOOD);
-	//   }
-	//   fclose(fp);
-	//}
 
 	ItemScreen();
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
@@ -611,26 +541,7 @@ void GameMainLoop()
 		}
 
 		if (Dead)             // 뱀이 죽었을 경우
-		{
-			while (1)
-			{
-				printf("U R dead ! Game over\nStart new game? (Y/N and press ENTER)\n");
-				fflush(stdin);
-				scanf("%c", &newGameChoice);
-				if (newGameChoice == 'n' || newGameChoice == 'N')
-				{
-					NoNewGame = 1; break;
-				}
-				if (newGameChoice == 'y' || newGameChoice == 'Y') break;
-				system("cls");
-			}
-		}
-		else
-		{
-			printf("Game over\n");
-			break;
-		}
-		if (NoNewGame);
+			Gameover();
 
 	}
 }
