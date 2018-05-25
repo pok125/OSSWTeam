@@ -8,17 +8,54 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-/*
-Config file:  config.cfg
-content:
-arraySizeX               16 // these two values should be equal
-arraySizeY               16 // no bigger than 16
-StartingDirection         2  // 0 - random.  1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu
-snakeSize               5  // no longer than 5;
-IncreaseSpeedOnEveryFood   1
-The config value is opened only if the user choose '0' for the size of the array.
-*/
+#include <stdlib.h>
+#include <mmstream.h>
 
+#pragma comment(lib,"winmm.lib")
+
+#define Space 32 //스페이스바의 아스키코드
+/*--------아래 매크로는 텍스트 색깔들을 정의함. ---------*/
+#define COL GetStdHandle(STD_OUTPUT_HANDLE)
+#define RED SetConsoleTextAttribute(COL, 0x000c);
+#define YELLOW SetConsoleTextAttribute(COL, 0x000e);
+#define GREEN SetConsoleTextAttribute(COL, 0x0002);
+#define SKY_BLUE SetConsoleTextAttribute(COL, 0x000b);
+#define BLUE SetConsoleTextAttribute(COL, 0x0001);
+#define PURPLE SetConsoleTextAttribute(COL, 0x000d);
+#define WHITE SetConsoleTextAttribute(COL, 0x000f);
+#define Enter 13
+#define COMMAND_SIZE 256\
+
+int handlecount = 0;
+int startcount = 0;
+void consolesize();	//콘솔창 크기 조절 함수
+void ItemScreen();	//아이템 출력부
+void GameMainLoop();	//지렁이 게임 메인 진행 함수
+void StoryScreen();	//스토리 진행 함수
+void Game();	//게임 대화창
+void gotoxy(int x, int y);	//xy커서 좌표이동
+void Gameover();	//게임오버시 화면
+
+
+void consolesize() {
+	//char command[COMMAND_SIZE] = { '\0', };
+	//int lines = 30;
+	//int cols = 100;
+	//printf(command, "mode con: lines=%d cols=%d", lines, cols);
+	//system(command);
+	system("title SewerEscape");   //실행창 이름 바꾸기
+	system("mode con:cols=100 lines=30");
+
+}
+
+void TT(void)
+{
+	gotoxy(53, 23);
+	printf(" 김덕영 / 김예지 / 이광호 / 김상훈 / 노형섭");
+	Sleep(3000);
+	gotoxy(53, 23);
+	printf("                                   ");
+}
 
 void gotoxy(int x, int y)
 {
@@ -27,7 +64,6 @@ void gotoxy(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
 
 }
-
 void hidecursor()
 {
 	HANDLE hOut;
@@ -40,10 +76,351 @@ void hidecursor()
 
 	SetConsoleCursorInfo(hOut, &ConCurInf);
 }
-
-int main()
+int Menu(void)
 {
-	FILE *fp;
+
+	const int x = 41;
+	int y = 18;
+	int key;
+
+	gotoxy(x, y);
+	printf("▶");
+	printf("게임시작");
+	gotoxy(x, y + 1);
+	printf("  개발자");
+	gotoxy(x, y + 2);
+	printf("  게임종료");
+
+
+	while (1)
+	{
+		gotoxy(x, y);
+		printf("");
+		key = _getch();
+		printf(" ");
+		switch (key)
+		{
+		case 72:     //방향키로 바꿔야함
+			if (y > 18) y--;
+			break;
+		case 80:     //얘도
+			if (y < 20) y++;
+			break;
+		case 13:
+		{//이것도 엔터
+			startcount = 1;
+			return y - 18;
+		}
+		}
+		if (handlecount != 1) {
+			gotoxy(x, y);
+			printf("▶");
+		}
+	}
+
+}
+void Game()
+{
+
+	system("cls");
+
+
+	gotoxy(0, 13);
+	printf("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	gotoxy(0, 14);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 15);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 16);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 17);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 18);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 19);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 20);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 21);
+	printf("┃                                                                            ┃");
+	gotoxy(0, 22);
+	printf("┃                                                                    enter▼ ┃");
+	gotoxy(0, 23);
+	printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+
+}
+void StartMenu()
+{
+	if (startcount == 0) {
+		consolesize();
+	}
+	system("cls");
+	int i;
+	int SELECT;
+
+	Sleep(1000);
+	RED
+		printf("                                                                                              \n");
+	printf("                                                                                              \n");
+	printf("      ■■■■     ■             ■        ■■■■■■        ■■■■■ ■       ■■■■      \n");
+	printf("                   ■           ■  ■                ■        ■         ■                     \n");
+	printf("    ■■■■■■   ■         ■      ■              ■        ■■■■   ■■   ■■■■■■    \n");
+	printf("                   ■       ■          ■          ■          ■         ■          ■         \n");
+	printf("       ■■■      ■■■                                       ■■■■■ ■         ■ ■       \n");
+	printf("      ■    ■     ■       ■■■■■■■  ■■■■■■■                                        \n");
+	printf("       ■■■      ■             ■              ■                  ■■■■    ■■■■■■■  \n");
+	printf("                   ■             ■              ■                        ■          ■        \n");
+	printf("                                                                      ■■■■       ■■■■     \n");
+	printf("                                                                      ■                   ■     \n");
+	printf("                                                                      ■■■■       ■■■■     \n");
+	printf("                                                                                     ■           \n");
+	printf("                                                                                     ■■■■     \n");
+	Sleep(500);
+	RED
+
+
+		PURPLE
+		gotoxy(41, 17);
+	printf("┏━━━━━━━━━━┓\n");
+
+	gotoxy(41, 21);
+	printf("┗━━━━━━━━━━┛\n");
+
+	WHITE
+
+		YELLOW
+
+
+		WHITE
+		while (1)
+		{
+			SELECT = Menu();
+			switch (SELECT)
+			{
+			case 0:
+				system("cls");
+				for (i = 3; i > 0; i--)
+				{
+					gotoxy(65, 24);
+					printf("Start in..%d", i);
+					Sleep(1000);
+				}
+				system("cls");
+				handlecount = 1;
+				StoryScreen();
+				////////////////////////////////////////게임 시작되야되는 부분
+				break;
+			case 1:
+				TT();
+				break;
+			case 2:
+				exit(0);
+				break;
+
+
+			}
+
+		}
+}
+void StoryScreen(void)
+{
+	int key;
+	int PrintCount = 0;
+	int roof = 1;
+
+
+	while (roof)
+	{
+		if (PrintCount == 0)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("일어나!\n");;
+			gotoxy(4, 16);
+			printf("일어나 정신이 들어?\n");
+			key = _getch();
+			if (key == 13)
+			{
+				PrintCount++;
+			}
+		}
+		if (PrintCount == 1)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("집으로 돌아가고 싶어?\n");
+			gotoxy(4, 16);
+			printf("돌아가고 싶겠지... \n");
+
+			key = _getch();
+			if (key == 13)
+			{
+				PrintCount++;
+			}
+		}
+		if (PrintCount == 2)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("하수구를 탐험하여 탈출을 해야 살아남을수가 있어!\n");
+			gotoxy(4, 16);
+			printf("할 수 있겠어?\n");
+
+			gotoxy(4, 19);
+			printf("  응  : press Y");
+			gotoxy(4, 20);
+			printf("아니 : press N");
+
+			key = _getch();
+			if (key == 'y' || key == 'Y')
+			{
+				PrintCount = 3;
+			}
+			if (key == 'n' || key == 'N')
+			{
+				PrintCount = 4;
+			}
+		}
+		if (PrintCount == 3)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("좋았어 의지가 충만하군\n");
+			gotoxy(4, 16);
+			printf("미로에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
+			gotoxy(4, 17);
+			printf("그럼 몸 조심해!");
+
+			key = _getch();
+			if (key == 13)
+			{
+				roof = 0;
+			}
+		}
+		if (PrintCount == 4)
+		{
+			Game();
+			gotoxy(4, 15);
+			printf("싫다고? 그럼 죽어!\n");
+			Sleep(1000);
+			gotoxy(4, 16);
+			printf("농담이고 싫어도 해야해!\n");
+			Sleep(1000);
+			gotoxy(4, 17);
+			printf("하수구에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
+			Sleep(1000);
+			gotoxy(4, 18);
+			printf("그럼 몸 조심해!");
+
+			key = _getch();
+			if (key == 13)
+			{
+				roof = 0;
+			}
+
+		}
+	}
+
+	handlecount = 2;
+	if (handlecount == 2) {
+
+		system("cls");
+		GameMainLoop();
+	}
+}
+void Gameover()
+{
+	RED
+		gotoxy(0, 0);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	Sleep(1000);
+	WHITE
+		char key;
+	gotoxy(34, 13);
+	printf("당신은 죽었습니다.");
+	Sleep(1000);
+	//	system("cls");
+	gotoxy(30, 14);
+	printf("다시하시겠습니까?   Y/N");
+	while (1)
+	{
+
+		printf("");
+		key = _getch();
+		printf(" ");
+		switch (key)
+		{
+		case 'n':
+			StartMenu();
+			break;
+		case 'N':
+			StartMenu();
+			break;
+		case 'y':
+
+			StartMenu();
+			break;
+		case 'Y':
+			StartMenu();
+			break;
+		}
+	}
+
+}
+
+void GameMainLoop()
+{
+
 	int NUMBER_OF_CONFIG_ELEMENTS = 5;
 	int STARTING_DIRECTION = 0;
 	int INITIAL_SNAKE_SIZE = 3;
@@ -72,47 +449,14 @@ int main()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
 
-					  //while (1)                 //초기 스테이지 크기 설정
-					  //{
-					  //   fflush(stdin);
-					  //   printf("Game window size (16 - 25)\nEnter '0' to use config file values");
-					  //   scanf("%d", &arraySizeX);
-
-					  //   if ((!(arraySizeX < 16 || arraySizeX > 25)) || (arraySizeX == 0)) break;
-					  //}
-					  /*
-					  Speed = 5;
-					  arraySizeY = 20;
-					  arraySizeX = arraySizeY*2;*/
 
 
 	Speed = 5;
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
-	//if (arraySizeX == 0)          //디폴트파일 설정 불러오기
-	//{
-	//   ChetemConfig = 1;
-	//   fp = fopen("config.cfg", "rt");
-	//   if (fp == NULL)
-	//   {
-	//      printf("Cannot find config file. Check existance or start new game and choose value between 16-25 for window game size\nGame will now exit.");
-	//      _getch();
-	//      return 0;
-	//   }
-	//   for (i = 0; i < NUMBER_OF_CONFIG_ELEMENTS; i++)
-	//   {
-	//      if (i == 0) fscanf(fp, "%s%d", unused, &arraySizeX);
-	//      if (i == 1) fscanf(fp, "%s%d", unused, &arraySizeY);
-	//      if (i == 2) fscanf(fp, "%s%d", unused, &STARTING_DIRECTION);
-	//      if (i == 3) fscanf(fp, "%s%d", unused, &INITIAL_SNAKE_SIZE);
-	//      if (i == 4) fscanf(fp, "%s%d", unused, &INCREASE_SPEED_ON_EVERY_FOOD);
-	//   }
-	//   fclose(fp);
-	//}
 
-
+	ItemScreen();
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
 	{
@@ -121,35 +465,6 @@ int main()
 
 	for (i = 0; i < arraySizeX * arraySizeY; i++) arr[i] = ' '; //맵 공백 초기화
 																/* Create the frame arraySizeX * arraySizeY */
-
-
-
-	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
-
-	gotoxy(42, 11);
-	printf("■■■■■■■");
-	gotoxy(42, 12);
-	printf("■ I T E M  ■");
-	gotoxy(42, 13);
-	printf("■■■■■■■");
-	gotoxy(42, 14);
-	printf("■ 1:  %d    ■", itemArray[0]); //kdy
-	gotoxy(42, 15);
-	printf("■■■■■■■");
-	gotoxy(42, 16);
-	printf("■ 2:       ■");
-	gotoxy(42, 17);
-	printf("■■■■■■■");
-	gotoxy(42, 18);
-	printf("■ 3:       ■");
-	gotoxy(42, 19);
-	printf("■■■■■■■");
-
-
-
-
-
-
 	for (i = 0; i < arraySizeX * arraySizeY; i++)
 	{
 
@@ -483,28 +798,41 @@ int main()
 		}
 
 		if (Dead)             // 뱀이 죽었을 경우
-		{
-			while (1)
-			{
-				printf("U R dead ! Game over\nStart new game? (Y/N and press ENTER)\n");
-				fflush(stdin);
-				scanf("%c", &newGameChoice);
-				if (newGameChoice == 'n' || newGameChoice == 'N')
-				{
-					NoNewGame = 1; break;
-				}
-				if (newGameChoice == 'y' || newGameChoice == 'Y') break;
-				system("cls");
-			}
-		}
-		else
-		{
-			printf("Game over\n");
-			break;
-		}
-		if (NoNewGame);
+			Gameover();
 
 	}
+}
+
+void ItemScreen()
+{
+	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
+
+	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
+
+	gotoxy(42, 11);
+	printf("■■■■■■■");
+	gotoxy(42, 12);
+	printf("■ I T E M  ■");
+	gotoxy(42, 13);
+	printf("■■■■■■■");
+	gotoxy(42, 14);
+	printf("■ 1:  %d    ■", itemArray[0]); //kdy
+	gotoxy(42, 15);
+	printf("■■■■■■■");
+	gotoxy(42, 16);
+	printf("■ 2:       ■");
+	gotoxy(42, 17);
+	printf("■■■■■■■");
+	gotoxy(42, 18);
+	printf("■ 3:       ■");
+	gotoxy(42, 19);
+	printf("■■■■■■■");
+}
+int main()
+{
+
+	StartMenu();
+
 	_getch();
 	return 0;
 }
