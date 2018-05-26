@@ -1328,7 +1328,6 @@ void ItemScreen()
 }
 int main()
 {
-
 	StartMenu();
 
 	_getch();
