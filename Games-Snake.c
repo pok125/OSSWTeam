@@ -22,7 +22,7 @@
 #define UP 72
 #define DOWN 80
 /////////////////////////////////
-#define MAX 100
+#define MAX 50
 /////////////////////////////////
 
 ///////////////////////함수선언부///////////////////////////
@@ -50,7 +50,7 @@ int PCX = 2;	//주인공 좌표X
 int PCY = 4;	//주인공 좌표Y
 int second = 0;	//초받아오는 변수
 int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
-int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
+int itemArray[MAX] = { 6 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
 int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
@@ -460,12 +460,16 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 				snakeSize += 1;
 				gotoxy(46, 21);
 				printf("효과 : 지렁이 길이 +1!!");
+				printf("%d", itemArray[front]);
 			}
 		}
-		else if (3< itemArray[front] <5)
+		else if (3< itemArray[front]<5) // 왜인지 에러
 		{
-			gotoxy(46, 21);
-			printf("효과 : 나는 무적이다!!");
+			if (snakeSize < 50)
+			{
+				gotoxy(46, 21);
+				printf("효과 : 나는 무적이다!!");
+			}
 		}
 
 		front += 1;
@@ -499,14 +503,6 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 		gotoxy(48, 14);
 		printf(" ");
 	}
-	/*
-	gotoxy(48, 14);
-	printf("%d", itemArray[front+1]); //1번 템
-	gotoxy(48, 16);
-	printf("%d", itemArray[front]);
-	gotoxy(48, 18);
-	printf("%d", itemArray[front-1]);
-	*/
 
 
 }
@@ -882,8 +878,8 @@ void GameMainLoop()
 	int CheckFoodCoord = 0;
 	int CheckItemCoord = 0;
 	char unused[30];
-	int arraySizeX = 16;
-	int arraySizeY = 16;
+	int arraySizeX = 20;
+	int arraySizeY = 20;
 	int newFood = 1;
 	int NoNewGame = 0;
 	int foodPos[2];
@@ -903,8 +899,6 @@ void GameMainLoop()
 	int foodCount;
 	int NeedEscape;
 
-	arraySizeY = 20;
-	arraySizeX = arraySizeY;
 
 	if (stageNum == 1)
 	{
@@ -1337,7 +1331,7 @@ void GameMainLoop()
 					if (Key == 27) break;
 				}
 			}
-			/* 아이템 사용 */
+			/* 아이템 사용 시 get 함수 호출 */
 			if (Key == 'q' || Key == 'Q')
 			{
 				get(Speed, snakeSize);
@@ -1495,6 +1489,7 @@ void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int
 }
 int main()
 {
+	GameMainLoop();
 	StartMenu();
 	_getch();
 	return 0;
