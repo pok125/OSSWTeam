@@ -1,17 +1,9 @@
-﻿#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-#include <stdlib.h>
-
-
-#pragma comment(lib,"winmm.lib")
 
 /////////아래 매크로는 텍스트 색깔들을 정의함/////////////////
 #define COL GetStdHandle(STD_OUTPUT_HANDLE)
@@ -61,7 +53,8 @@ int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함�
 int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
-/////////////////////////////////////////
+int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
+				  /////////////////////////////////////////
 
 void Clock()
 {
@@ -301,9 +294,12 @@ void StoryScreen()
 		{
 			Game();
 			gotoxy(4, 15);
-			printf("집으로 돌아가고 싶어?\n");
+			printf("너 길가다가 하수구에 빠진거 기억 안나?\n");
 			gotoxy(4, 16);
-			printf("돌아가고 싶겠지... \n");
+			printf("그러길래 술 적당히 마시지 그랬어...;; ");
+			gotoxy(4, 17);
+			printf("하수구를 나가려면 게임을 클리어 해야해! ");
+
 
 			key = _getch();
 			if (key == 13)
@@ -315,7 +311,7 @@ void StoryScreen()
 		{
 			Game();
 			gotoxy(4, 15);
-			printf("하수구를 탐험하여 탈출을 해야 살아남을수가 있어!\n");
+			printf("여기 하수구를 탐험하여 탈출을 해야 살아남을수가 있어!\n");
 			gotoxy(4, 16);
 			printf("할 수 있겠어?\n");
 
@@ -340,7 +336,7 @@ void StoryScreen()
 			gotoxy(4, 15);
 			printf("좋았어 의지가 충만하군\n");
 			gotoxy(4, 16);
-			printf("미로에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
+			printf("게임에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
 			gotoxy(4, 17);
 			printf("그럼 몸 조심해!");
 
@@ -356,13 +352,10 @@ void StoryScreen()
 			Game();
 			gotoxy(4, 15);
 			printf("싫다고? 그럼 죽어!\n");
-			Sleep(1000);
 			gotoxy(4, 16);
 			printf("농담이고 싫어도 해야해!\n");
-			Sleep(1000);
 			gotoxy(4, 17);
-			printf("하수구에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
-			Sleep(1000);
+			printf("게임에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
 			gotoxy(4, 18);
 			printf("그럼 몸 조심해!");
 
@@ -378,7 +371,7 @@ void StoryScreen()
 
 	if (PrintCount == 5) {
 
-		system("cls");
+		//	system("cls");
 		MainStation();
 	}
 }
@@ -581,33 +574,9 @@ void Gameover()
 	}
 
 }
-void HelperScreen()
-{
-
-	gotoxy(20, 0);
-	printf("┏━━━━━━━━━━━━━━━━┓");
-	gotoxy(20, 1);
-	printf("┃                                ┃");
-	gotoxy(20, 2);
-	printf("┃                                ┃");
-	gotoxy(20, 3);
-	printf("┃                                ┃");
-	gotoxy(20, 4);
-	printf("┃                                ┃");
-	gotoxy(20, 5);
-	printf("┃                                ┃");
-	gotoxy(20, 6);
-	printf("┃                                ┃");
-	gotoxy(20, 7);
-	printf("┃                                ┃");
-	gotoxy(20, 8);
-	printf("┃                        enter▼ ┃");
-	gotoxy(20, 9);
-	printf("┗━━━━━━━━━━━━━━━━┛");
-
-}
 void MainStation()
 {
+	system("cls");
 	int NPCX, NPCY;
 	int arraySizeY = 10;
 	int arraySizeX = arraySizeY;
@@ -751,20 +720,92 @@ void MainStation()
 			gotoxy(20, 9);
 			printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 
-			gotoxy(22, 1);
-			printf("탈출하기 위해\n");
-			gotoxy(22, 1);
-			printf("너가 해야할 게임은\n");
-			gotoxy(22, 2);
-			printf("지렁이 게임이야\n");
-			gotoxy(22, 3);
-			printf("아래에있는 ★에 가면");
-			gotoxy(22, 4);
-			printf("탈출을 위한 게임할수있어");
-			gotoxy(22, 5);
-			printf("죽지 않게 조심해!");
-			TalkCheck = 1;
-			SBCheck = 1;
+			if (stageNum == 1)
+			{
+				gotoxy(22, 1);
+				printf("탈출하기 위해\n");
+				gotoxy(22, 1);
+				printf("너가 해야할 게임은\n");
+				gotoxy(22, 2);
+				printf("지렁이 게임이야\n");
+				gotoxy(22, 3);
+				printf("아래에있는 ★에 가면");
+				gotoxy(22, 4);
+				printf("탈출을 위한 게임할수있어");
+				gotoxy(22, 5);
+				printf("죽지 않게 조심해!");
+				TalkCheck = 1;
+				SBCheck = 1;
+			}
+			else if (stageNum == 2)
+			{
+				gotoxy(22, 1);
+				printf("첫번째는 쉽지?\n");
+				gotoxy(22, 1);
+				printf("이제 세번만 더하면\n");
+				gotoxy(22, 2);
+				printf("탈출 할수있어\n");
+				gotoxy(22, 3);
+				printf("갈수록 어려워지니 조심해");
+				gotoxy(22, 4);
+				printf("아래에있는 ★에 가면");
+				gotoxy(22, 5);
+				printf("다음 게임을 할수있어!");
+				TalkCheck = 1;
+				SBCheck = 1;
+			}
+			else if (stageNum == 3)
+			{
+				gotoxy(22, 1);
+				printf("두번째도 꽤나 \n");
+				gotoxy(22, 1);
+				printf("잘 해내었구나!\n");
+				gotoxy(22, 2);
+				printf("지금 처럼 계속\n");
+				gotoxy(22, 3);
+				printf("하면 탈출 할수 있을거야");
+				gotoxy(22, 4);
+				printf("★에 가면 다음게임을 할수있어");
+				gotoxy(22, 5);
+				printf("죽지 않게 조심해!");
+				TalkCheck = 1;
+				SBCheck = 1;
+			}
+			else if (stageNum == 4)
+			{
+				gotoxy(22, 1);
+				printf("마지막이구나 \n");
+				gotoxy(22, 1);
+				printf("나름 정들었는데\n");
+				gotoxy(22, 2);
+				printf("그래도 나가야겠지?\n");
+				gotoxy(22, 3);
+				printf("아래에있는 ★에 가면");
+				gotoxy(22, 4);
+				printf("탈출을 위한 게임할수있어");
+				gotoxy(22, 5);
+				printf("마지막이니 죽지마!");
+				TalkCheck = 1;
+				SBCheck = 1;
+			}
+			else if (stageNum == 5)
+			{
+				gotoxy(22, 1);
+				printf("해냈구나!\n");
+				gotoxy(22, 1);
+				printf("이제 탈출 할수있어!\n");
+				gotoxy(22, 2);
+				printf("아래에있는 ★에가면 \n");
+				gotoxy(22, 3);
+				printf("바깥 세상으로 나갈수 있어!");
+				gotoxy(22, 4);
+				printf("지금 까지 고생했고");
+				gotoxy(22, 5);
+				printf("잘가!");
+				TalkCheck = 1;
+				SBCheck = 1;
+			}
+
 		}
 		else if (DetectHelper == 0)
 		{
@@ -795,6 +836,10 @@ void MainStation()
 		{
 			GameMainLoop();
 		}
+		else if (SBCheck == 1 && PCX == NPCX && PCY == NPCY + 6 && stageNum == 5)
+		{
+			StartMenu();
+		}
 	}
 }
 void GameMainLoop()
@@ -804,13 +849,11 @@ void GameMainLoop()
 	int STARTING_DIRECTION = 0;
 	int INITIAL_SNAKE_SIZE = 3;
 	int INCREASE_SPEED_ON_EVERY_FOOD = 0;
-	char newGameChoice = 0;
 	char Key;
 	int CurrentDir = 0;
 	int direction_snake = 0;
 	int Dead = 0;
 	int i, j, z, createItem;
-	int Speed;
 	char *arr = NULL;
 	int CheckFoodCoord = 0;
 	int CheckItemCoord = 0;
@@ -831,32 +874,57 @@ void GameMainLoop()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
-	int foodCount = 0; //스테이지 별 먹이 수 제한 
-	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
-	int lifeCount = 0; //목숨 개수(스테이지별 초기화)
 	int shieldItem = 0; // 무적아이템 유무확인 변수
+	int lifeCount;
+	int foodCount;
+	int NeedEscape;
+	int Speed;
 
-	COORD pos = { 0, 0 };
-	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	Speed = 5;
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
+
+	if (stageNum == 1)
+	{
+		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		foodCount = 0; //스테이지 별 먹이 수 제한 
+		NeedEscape = 5;
+		Speed = 3;
+	}
+	else if (stageNum == 2)
+	{
+		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		foodCount = 0; //스테이지 별 먹이 수 제한 
+		NeedEscape = 7;
+		Speed = 5;
+	}
+	else if (stageNum == 3)
+	{
+		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		foodCount = 0; //스테이지 별 먹이 수 제한 
+		NeedEscape = 9;
+		Speed = 7;
+	}
+	else if (stageNum == 4)
+	{
+		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		foodCount = 0; //스테이지 별 먹이 수 제한 
+		NeedEscape = 12;
+		Speed = 9;
+	}
 
 	ItemScreen();
 	gotoxy(58, 0);
 	printf("♤ : 먹이");
 	gotoxy(58, 1);
-	printf("△ : 스피드 업 ('q','Q'키 입력 시 사용가능)");
+	printf("△ : 스피드 업 (Q 입력 시 사용가능)");
 	gotoxy(58, 2);
 	printf("▽ : 스피드 다운");
 	gotoxy(58, 3);
-	printf("● : 지렁이 길이 +1 ('q','Q'키 입력 시 사용가능)");
+	printf("● : 지렁이 길이 +1 (Q 입력 시 사용가능)");
 	gotoxy(58, 4);
 	printf("○ : 지렁이 길이 -1");
 	gotoxy(58, 5);
-	printf("★ : 무적 ('q','Q'키 입력 시 사용가능)");
-	gotoxy(58, 6);
+	printf("★ : 무적 (Q 입력 시 사용가능)");
 
 	arr = (char*)malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
@@ -894,21 +962,24 @@ void GameMainLoop()
 		lifeScreen(lifeCount);
 		snakeSize = 3;
 
-		z = 24; /* iterator for game life cycle - used to count moves after food appearence         z는 음식이 사라지기 전 움직일 수 있는 최대값*/
-				/* this value should be afunction of the field size - if it si 16 -> then we have to have at least 24 moves before food dissapear*/
-				/* Input validation for speed*/
+		z = 24; //z는 음식이 사라지기 전 움직일 수 있는 최대값
 
 		SetCharacterPosition(snakePos, snakeSize, 2, snakeDir); // 뱀 고정 위치 설정
 		fflush(stdin);
 
 		while (1)
 		{
+
+
 			z--;
 			createItem--;
 			if (z == 0) newFood = 1;
 			if (createItem == 0) newItem = 1;
-			/* Clear the screen and print the matrix and snake again */
 			// z가 25번 넘어가면 음식 다시생기게하는 부분
+
+			gotoxy(2, 20);
+			printf("%d : 탈출까지 길어져야 하는 목표 갯수", NeedEscape - snakeSize + 3);
+
 
 			izqdeGolemiq = 0;
 			CurrentDir = snakeDir;
@@ -1142,9 +1213,7 @@ void GameMainLoop()
 			}
 
 			//system("cls");
-			pos.X = 0;
-			pos.Y = 0;
-			SetConsoleCursorPosition(output, pos);
+			gotoxy(0, 0);
 			/* print the matrix with the snake and the food*/
 			for (i = 0; i < arraySizeX; i++)
 			{
@@ -1202,6 +1271,11 @@ void GameMainLoop()
 			/* if condition Dead is satisfied -> break  키보드로 뱀 이동*/
 			Key = 0;
 			if (Dead) break;
+			if (NeedEscape - snakeSize + 3 == 0)
+			{
+
+				break;
+			}
 			Sleep(1000 / Speed);
 			if (_kbhit())
 			{
@@ -1258,7 +1332,14 @@ void GameMainLoop()
 		}
 
 		if (Dead)             // 뱀이 죽었을 경우
+		{
 			Gameover();
+		}
+		if (NeedEscape - snakeSize + 3 == 0)
+		{
+			stageNum++;
+			MainStation();
+		}
 
 	}
 }
