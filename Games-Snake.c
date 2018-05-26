@@ -9,12 +9,11 @@
 #include <time.h>
 #include <windows.h>
 #include <stdlib.h>
-#include <mmstream.h>
+
 
 #pragma comment(lib,"winmm.lib")
 
-#define Space 32 //스페이스바의 아스키코드
-/*--------아래 매크로는 텍스트 색깔들을 정의함. ---------*/
+/////////아래 매크로는 텍스트 색깔들을 정의함/////////////////
 #define COL GetStdHandle(STD_OUTPUT_HANDLE)
 #define RED SetConsoleTextAttribute(COL, 0x000c);
 #define YELLOW SetConsoleTextAttribute(COL, 0x000e);
@@ -23,13 +22,18 @@
 #define BLUE SetConsoleTextAttribute(COL, 0x0001);
 #define PURPLE SetConsoleTextAttribute(COL, 0x000d);
 #define WHITE SetConsoleTextAttribute(COL, 0x000f);
+///////키보드 아스키코드/////////
+#define Space 32 
 #define Enter 13
-#define COMMAND_SIZE 256
-#define MAX 100\
+#define LEFT 75
+#define RIGHT 77
+#define UP 72
+#define DOWN 80
+/////////////////////////////////
+#define MAX 100
+/////////////////////////////////
 
-
-int handlecount = 0;
-int startcount = 0;
+///////////////////////함수선언부///////////////////////////
 void consolesize();	//콘솔창 크기 조절 함수
 void ItemScreen();	//아이템 출력부
 void GameMainLoop();	//지렁이 게임 메인 진행 함수
@@ -37,97 +41,102 @@ void StoryScreen();	//스토리 진행 함수
 void Game();	//게임 대화창
 void gotoxy(int x, int y);	//xy커서 좌표이동
 void Gameover();	//게임오버시 화면
-int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
+void MainStation(); //게임 대기 장소
+void CursorHide();	//커서 숨기는 함수
+void PCKeyInput();	//캐릭터 키보드 함수
+void Clock();	//시스템 시간받아오는 함수
+void Gamesetting();	//게임 기본세팅함수
 void lifeScreen(int lifeCount); //목숨 출력부
 void printState(int state); //상태 출력 함수
-int limitFoodByStage(int stageNum);
+void init_list(); //item 리스트 재실행시 초기화 
+				  ////////////////////////////////////////////////////////////
+
+
+				  ///////////////전역변수부///////////////
+int PCX = 2;	//주인공 좌표X
+int PCY = 4;	//주인공 좌표Y
+int second = 0;	//초받아오는 변수
+int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
 int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
-void init_list(); //item 리스트 재실행시 초기화 
+/////////////////////////////////////////
 
-void consolesize() {
-	//char command[COMMAND_SIZE] = { '\0', };
-	//int lines = 30;
-	//int cols = 100;
-	//printf(command, "mode con: lines=%d cols=%d", lines, cols);
-	//system(command);
-	system("title SewerEscape");   //실행창 이름 바꾸기
-	system("mode con:cols=100 lines=30");
-
-}
-
-void TT(void)
+void Clock()
 {
-	gotoxy(53, 23);
-	printf(" 김덕영 / 김예지 / 이광호 / 김상훈 / 노형섭");
-	Sleep(3000);
-	gotoxy(53, 23);
-	printf("                                   ");
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	second = st.wSecond;
 }
-
-void gotoxy(int x, int y)
+void Gamesetting()
 {
 
-	COORD CursorPosition = { x,y };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
-
+	Clock();
+	CursorHide();
 }
-void hidecursor()
-{
-	HANDLE hOut;
-	CONSOLE_CURSOR_INFO ConCurInf;
-
-	hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	ConCurInf.dwSize = 1;
-	ConCurInf.bVisible = FALSE;
-
-	SetConsoleCursorInfo(hOut, &ConCurInf);
-}
-int Menu(void)
-{
-
-	const int x = 41;
-	int y = 18;
+void PCKeyInput() {
 	int key;
 
-	gotoxy(x, y);
-	printf("▶");
-	printf("게임시작");
-	gotoxy(x, y + 1);
-	printf("  개발자");
-	gotoxy(x, y + 2);
-	printf("  게임종료");
-
-
-	while (1)
+	for (int i = 0; i<20; i++)
 	{
-		gotoxy(x, y);
-		printf("");
-		key = _getch();
-		printf(" ");
-		switch (key)
-		{
-		case 72:     //방향키로 바꿔야함
-			if (y > 18) y--;
-			break;
-		case 80:     //얘도
-			if (y < 20) y++;
-			break;
-		case 13:
-		{//이것도 엔터
-			startcount = 1;
-			return y - 18;
+		if (_kbhit() != 0) {
+			gotoxy(PCX, PCY);
+			printf("  ");
+			key = _getch();
+			switch (key) {
+			case LEFT:
+				if (PCX != 2)
+				{
+					PCX -= 2;
+				}
+				break;
+			case RIGHT:
+				if (PCX != 8 * 2)
+				{
+					PCX += 2;
+				}
+
+				break;
+			case UP:
+				if (PCY != 1)
+				{
+					PCY--;
+				}
+				break;
+			case DOWN:
+				if (PCY != 8)
+				{
+					PCY++;
+				}
+
+				break;
+			}
 		}
-		}
-		if (handlecount != 1) {
-			gotoxy(x, y);
-			printf("▶");
-		}
+
 	}
 
 }
+void consolesize()
+{
+	system("title SewerEscape");   //실행창 이름 바꾸기
+	system("mode con:cols=100 lines=30");
+}
+
+
+void gotoxy(int x, int y)
+{
+	COORD CursorPosition = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
+}
+
+void CursorHide()
+{
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.dwSize = 1;
+	cursorInfo.bVisible = FALSE;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
 void Game()
 {
 
@@ -161,15 +170,19 @@ void Game()
 }
 void StartMenu()
 {
-	if (startcount == 0) {
-		consolesize();
-	}
+	consolesize();
+	Gamesetting();
 	system("cls");
+
+	const int x = 41;
+	int y = 18;
+	int key;
 	int i;
-	int SELECT;
+	int Select = 3;
 
 	Sleep(1000);
 	RED
+		//	gotoxy(0, 0);
 		printf("                                                                                              \n");
 	printf("                                                                                              \n");
 	printf("      ■■■■     ■             ■        ■■■■■■        ■■■■■ ■       ■■■■      \n");
@@ -186,10 +199,8 @@ void StartMenu()
 	printf("                                                                                     ■           \n");
 	printf("                                                                                     ■■■■     \n");
 	Sleep(500);
-	RED
 
-
-		PURPLE
+	PURPLE
 		gotoxy(41, 17);
 	printf("┏━━━━━━━━━━┓\n");
 
@@ -198,14 +209,44 @@ void StartMenu()
 
 	WHITE
 
-		YELLOW
 
+		gotoxy(x, y);
+	printf("▶");
+	printf("게임시작");
+	gotoxy(x, y + 1);
+	printf("  개발자");
+	gotoxy(x, y + 2);
+	printf("  게임종료");
 
-		WHITE
+	WHITE
 		while (1)
 		{
-			SELECT = Menu();
-			switch (SELECT)
+
+
+
+
+
+			gotoxy(x, y);
+			printf("");
+			key = _getch();
+			printf(" ");
+			switch (key)
+			{
+			case 72:     //방향키로 바꿔야함
+				if (y > 18) y--;
+				break;
+			case 80:     //얘도
+				if (y < 20) y++;
+				break;
+			case 13:
+				Select = y - 18;
+				break;
+			}
+			gotoxy(x, y);
+			printf("▶");
+
+
+			switch (Select)
 			{
 			case 0:
 				system("cls");
@@ -216,23 +257,24 @@ void StartMenu()
 					Sleep(1000);
 				}
 				system("cls");
-				handlecount = 1;
+				//handlecount = 1;
 				StoryScreen();
 				////////////////////////////////////////게임 시작되야되는 부분
 				break;
 			case 1:
-				TT();
+				gotoxy(53, 23);
+				printf(" 김덕영 / 김예지 / 이광호 / 김상훈 / 노형섭");
 				break;
 			case 2:
 				exit(0);
 				break;
 
-
 			}
-
 		}
+
+
 }
-void StoryScreen(void)
+void StoryScreen()
 {
 	int key;
 	int PrintCount = 0;
@@ -305,6 +347,7 @@ void StoryScreen(void)
 			if (key == 13)
 			{
 				roof = 0;
+				PrintCount = 5;
 			}
 		}
 		if (PrintCount == 4)
@@ -326,20 +369,19 @@ void StoryScreen(void)
 			if (key == 13)
 			{
 				roof = 0;
+				PrintCount = 5;
 			}
 
 		}
 	}
 
-	handlecount = 2;
-	if (handlecount == 2) {
+	if (PrintCount == 5) {
 
 		system("cls");
-		GameMainLoop();
+		MainStation();
 	}
 }
 /* 아이템 목록 관련 큐 추가 */
-
 void init_list()// init 함수로 재시작 시 초기화
 {
 	rear = 3;
@@ -450,7 +492,6 @@ void get() // itemArray 큐에서 빼냄
 
 
 }
-
 void Gameover()
 {
 	RED
@@ -505,13 +546,13 @@ void Gameover()
 	Sleep(100);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 	Sleep(1000);
 	WHITE
 		char key;
 	gotoxy(34, 13);
 	printf("당신은 죽었습니다.");
 	Sleep(1000);
-	//	system("cls");
 	gotoxy(30, 14);
 	printf("다시하시겠습니까?   Y/N");
 	while (1)
@@ -539,7 +580,222 @@ void Gameover()
 	}
 
 }
+void HelperScreen()
+{
 
+	gotoxy(20, 0);
+	printf("┏━━━━━━━━━━━━━━━━┓");
+	gotoxy(20, 1);
+	printf("┃                                ┃");
+	gotoxy(20, 2);
+	printf("┃                                ┃");
+	gotoxy(20, 3);
+	printf("┃                                ┃");
+	gotoxy(20, 4);
+	printf("┃                                ┃");
+	gotoxy(20, 5);
+	printf("┃                                ┃");
+	gotoxy(20, 6);
+	printf("┃                                ┃");
+	gotoxy(20, 7);
+	printf("┃                                ┃");
+	gotoxy(20, 8);
+	printf("┃                        enter▼ ┃");
+	gotoxy(20, 9);
+	printf("┗━━━━━━━━━━━━━━━━┛");
+
+}
+void MainStation()
+{
+	int NPCX, NPCY;
+	int arraySizeY = 10;
+	int arraySizeX = arraySizeY;
+	char *arr = NULL;
+	int TalkCheck = 0;
+	int DetectHelper = 0;
+	int SBCheck = 0;
+
+
+	NPCX = NPCY = 10;
+
+
+	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류 확인
+	if (arr == NULL)
+	{
+		printf("cannot allocate memory\n"); _getch();
+	}
+
+	for (int i = 0; i < arraySizeX * arraySizeY; i++) arr[i] = '0'; //맵 공백 초기화
+																	/* 맵의 프레임 생성은 (arraySizeX * arraySizeY) */
+	for (int i = 0; i < arraySizeX * arraySizeY; i++)
+	{
+
+		if (i < arraySizeX) arr[i] = '1';
+		else if (i % arraySizeX == 0) { arr[i] = '1'; }
+		else if (i > arraySizeX * (arraySizeY - 1)) arr[i] = '1';
+		else if (i % arraySizeX == arraySizeX - 1) arr[i] = '1';
+		//else arr[i] = ' '; 
+
+	}
+
+
+	for (int i = 0; i < arraySizeX; i++)
+	{
+		void hidecursor();
+
+		if (i == 4)	//x좌표 수집
+		{
+			NPCX = i * 2;
+		}
+		for (int j = 0; j < arraySizeY; j++)
+		{
+			if (j == 2)	//Y좌표 수집
+			{
+				NPCY = j;
+			}
+			if (arr[i * arraySizeX + j] == '1')
+			{
+				printf("■");
+				//j++;
+			}
+			else if (arr[i * arraySizeX + j] == '0')
+			{
+				printf("  ");
+			}
+			else if (arr[i * arraySizeX + j] == '*')
+			{
+				printf("●");
+			}
+			else if (arr[i * arraySizeX + j] == '+')
+			{
+				printf("♡");
+			}
+			//   printf("%c", arr[i * arraySizeX + j]);
+		}
+		printf("\n");
+	}
+
+
+	int timer = 0;
+	while (1)
+	{
+		Gamesetting();
+		gotoxy(NPCX, NPCY);
+		printf("§");
+		if (SBCheck == 0)
+		{
+			if (second % 2 == 0)
+			{
+				gotoxy(NPCX - 2, NPCY - 1);
+				printf("이리와");
+			}
+			else if (second % 2 != 0)
+			{
+				gotoxy(NPCX - 2, NPCY - 1);
+				printf("대화해");
+				timer = 0;
+			}
+		}
+		else
+		{
+			gotoxy(NPCX - 2, NPCY - 1);
+			printf("      ");
+			gotoxy(NPCX, NPCY + 6);
+			printf("★");
+		}
+		timer++;
+		gotoxy(PCX, PCY);
+		printf("⊙");
+		PCKeyInput();
+
+		if (PCX == NPCX && PCY - NPCY <= 1 && PCY - NPCY >= 0) //down
+		{
+			DetectHelper = 1;
+		}
+		else if (PCY == NPCY && PCX - NPCX <= 2 && PCX - NPCX >= 0)//right
+		{
+			DetectHelper = 1;
+		}
+		else if (PCY == NPCY && NPCX - PCX <= 2 && NPCX - PCX >= 0)//left
+		{
+			DetectHelper = 1;
+		}
+		else
+		{
+			DetectHelper = 0;
+			TalkCheck = 0;
+
+		}
+
+		if (DetectHelper == 1 && TalkCheck == 0)
+		{
+			gotoxy(20, 0);
+			printf("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			gotoxy(20, 1);
+			printf("┃                           ┃");
+			gotoxy(20, 2);
+			printf("┃                           ┃");
+			gotoxy(20, 3);
+			printf("┃                           ┃");
+			gotoxy(20, 4);
+			printf("┃                           ┃");
+			gotoxy(20, 5);
+			printf("┃                           ┃");
+			gotoxy(20, 6);
+			printf("┃                           ┃");
+			gotoxy(20, 7);
+			printf("┃                           ┃");
+			gotoxy(20, 8);
+			printf("┃                           ┃");
+			gotoxy(20, 9);
+			printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+
+			gotoxy(22, 1);
+			printf("탈출하기 위해\n");
+			gotoxy(22, 1);
+			printf("너가 해야할 게임은\n");
+			gotoxy(22, 2);
+			printf("지렁이 게임이야\n");
+			gotoxy(22, 3);
+			printf("아래에있는 ★에 가면");
+			gotoxy(22, 4);
+			printf("탈출을 위한 게임할수있어");
+			gotoxy(22, 5);
+			printf("죽지 않게 조심해!");
+			TalkCheck = 1;
+			SBCheck = 1;
+		}
+		else if (DetectHelper == 0)
+		{
+			gotoxy(20, 0);
+			printf("                                                ");
+			gotoxy(20, 1);
+			printf("                                                ");
+			gotoxy(20, 2);
+			printf("                                                ");
+			gotoxy(20, 3);
+			printf("                                                ");
+			gotoxy(20, 4);
+			printf("                                                ");
+			gotoxy(20, 5);
+			printf("                                                ");
+			gotoxy(20, 6);
+			printf("                                                ");
+			gotoxy(20, 7);
+			printf("                                                ");
+			gotoxy(20, 8);
+			printf("                                                ");
+			gotoxy(20, 9);
+			printf("                                                ");
+			gotoxy(22, 1);
+
+		}
+		if (SBCheck == 1 && PCX == NPCX && PCY == NPCY + 6)
+		{
+			GameMainLoop();
+		}
+	}
+}
 void GameMainLoop()
 {
 
@@ -1304,7 +1560,6 @@ void lifeScreen(int lifeCount) {
 	printf("■■■■■■■");
 
 }
-
 void printState(int state) {
 	switch (state)
 	{
@@ -1343,8 +1598,8 @@ void ItemScreen()
 }
 int main()
 {
-	StartMenu();
 
+	StartMenu();
 	_getch();
 	return 0;
 }
