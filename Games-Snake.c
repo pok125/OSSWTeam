@@ -39,7 +39,6 @@ void gotoxy(int x, int y);	//xy커서 좌표이동
 void Gameover();	//게임오버시 화면
 int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
 void lifeScreen(int lifeCount); //목숨 출력부
-void itemInfoScreen(); //아이템 설명 출력 
 void printState(int state); //상태 출력 함수
 int limitFoodByStage(int stageNum);
 int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
@@ -590,9 +589,21 @@ void GameMainLoop()
 	arraySizeX = arraySizeY;
 
 	ItemScreen();
-	itemInfoScreen();
+	gotoxy(58, 0);
+	printf("♤ : 먹이");
+	gotoxy(58, 1);
+	printf("△ : 스피드 업 ('q','Q'키 입력 시 사용가능)");
+	gotoxy(58, 2);
+	printf("▽ : 스피드 다운");
+	gotoxy(58, 3);
+	printf("● : 지렁이 길이 +1 ('q','Q'키 입력 시 사용가능)");
+	gotoxy(58, 4);
+	printf("○ : 지렁이 길이 -1");
+	gotoxy(58, 5);
+	printf("★ : 무적 ('q','Q'키 입력 시 사용가능)");
+	gotoxy(58, 6);
 
-	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
+	arr = (char*)malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
 	{
 		printf("cannot allocate memory\n"); _getch();
@@ -782,7 +793,7 @@ void GameMainLoop()
 
 			{
 				CheckItemCoord = 0;
-				selectItem = rand() % 4; // 아이템 랜덤으로 선택
+				selectItem = rand() % 5; // 아이템 랜덤으로 선택
 				for (;;)
 				{
 					item_testX = 1 + rand() % (arraySizeX - 2);
@@ -820,19 +831,21 @@ void GameMainLoop()
 					//충돌된 아이템에 따라 부여되는 효과 설정
 					switch (selectItem)
 					{
-						//스피드 증가 아이템
-					case 0:
-						put(0); //아이템 확인용 추후 삭제
+					case 0: //△ : 스피드 업
 						if (Speed < 40) Speed += 2;
 						break;
-					case 1:
-						put(1);
+					case 1: //▽ : 스피드 다운
+						if (Speed < 40 && Speed >0) Speed -= 2;
 						break;
-					case 2:
-						put(2);
+					case 2: //● : 지렁이 길이 +1
+						if (snakeSize < 50)
+							snakeSize++;
 						break;
-					case 3:
-						put(3);
+					case 3: //○ : 지렁이 길이 -1
+						if (snakeSize < 50 && snakeSize>0)
+							snakeSize--;
+						break;
+					case 4: //★ : 무적
 						break;
 					}
 
@@ -1123,18 +1136,20 @@ void GameMainLoop()
 
 			switch (selectItem)
 			{
-				//스피드 증가 아이템
-			case 0:
+			case 0: //△ : 스피드 업
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '&';
 				break;
-			case 1:
+			case 1: //▽ : 스피드 다운
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
 				break;
-			case 2:
-				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+			case 2: //● : 지렁이 길이 +1
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '$';
 				break;
-			case 3:
-				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+			case 3: //○ : 지렁이 길이 -1
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '(';
+				break;
+			case 4: //★ : 무적
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '!';
 				break;
 			}
 
@@ -1162,21 +1177,33 @@ void GameMainLoop()
 					{
 						printf("  ");
 					}
-					else if (arr[i * arraySizeX + j] == '*')
+					else if (arr[i * arraySizeX + j] == '*') //지렁이 모양 
 					{
 						printf("●");
 					}
-					else if (arr[i * arraySizeX + j] == '+')
+					else if (arr[i * arraySizeX + j] == '+') //♤ : 먹이 
 					{
 						printf("♤");
 					}
-					else if (arr[i * arraySizeX + j] == '&')
+					else if (arr[i * arraySizeX + j] == '&') //△ : 스피드 업
 					{
 						printf("△");
 					}
-					else if (arr[i * arraySizeX + j] == '^')
+					else if (arr[i * arraySizeX + j] == '^') //▽ : 스피드 다운
+					{
+						printf("▽");
+					}
+					else if (arr[i * arraySizeX + j] == '$') //● : 지렁이 길이 +1
 					{
 						printf("●");
+					}
+					else if (arr[i * arraySizeX + j] == '(') //○ : 지렁이 길이 -1
+					{
+						printf("○");
+					}
+					else if (arr[i * arraySizeX + j] == '!') //★ : 무적
+					{
+						printf("★");
 					}
 					//   printf("%c", arr[i * arraySizeX + j]);
 				}
@@ -1262,9 +1289,9 @@ void lifeScreen(int lifeCount) {
 	switch (lifeCount)
 	{
 	case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
-	case 1: gotoxy(42, 3); printf("■♥■  ■  ■"); break;
-	case 2: gotoxy(42, 3); printf("■♥■♥■  ■"); break;
-	case 3: gotoxy(42, 3); printf("■♥■♥■♥■"); break;
+	case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
+	case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
+	case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
 	default: break;
 	}
 	gotoxy(42, 0);
@@ -1277,30 +1304,18 @@ void lifeScreen(int lifeCount) {
 	printf("■■■■■■■");
 
 }
-void itemInfoScreen() {
-	gotoxy(58, 0);
-	printf("♤ : 먹이");
-	gotoxy(58, 1);
-	printf("△ : 스피드 업");
-	gotoxy(58, 2);
-	printf("▽ : 스피드 다운");
-	gotoxy(58, 3);
-	printf("● : 지렁이 길이 +1");
-	gotoxy(58, 4);
-	printf("○ : 지렁이 길이 -1");
-	gotoxy(58, 5);
-	printf("◑ : 먹이 먹을 시 +2");
-	gotoxy(58, 6);
-	printf("★ : 무적");
-}
+
 void printState(int state) {
 	switch (state)
 	{
 		//case 0: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
-	case 1: gotoxy(42, 9); printf("스피드가 증가 되었습니다.");  break;
-	case 2: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
-	case 3: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
-	default: break;
+		//case 0: gotoxy(42, 9); printf("△ : 스피드 업");  break;
+		//case 1: gotoxy(42, 9); printf("▽ : 스피드 다운");  break;
+		//case 2: gotoxy(42, 9); printf("● : 지렁이 길이 +1");  break;
+		//case 3: gotoxy(42, 9); printf("○ : 지렁이 길이 -1");  break;
+		//case 4: gotoxy(42, 9); printf("◑ : 먹이 먹을 시 +2");  break;
+		//case 5: gotoxy(42, 9); printf("★ : 무적");  break;
+		//default: break;
 	}
 }
 void ItemScreen()
