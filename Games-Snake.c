@@ -24,24 +24,22 @@
 #define PURPLE SetConsoleTextAttribute(COL, 0x000d);
 #define WHITE SetConsoleTextAttribute(COL, 0x000f);
 #define Enter 13
-#define COMMAND_SIZE 256
-#define MAX 100\
+#define COMMAND_SIZE 256\
 
 
 int handlecount = 0;
 int startcount = 0;
-void consolesize();   //콘솔창 크기 조절 함수
-void ItemScreen();   //아이템 출력부
-void GameMainLoop();   //지렁이 게임 메인 진행 함수
-void StoryScreen();   //스토리 진행 함수
-void Game();   //게임 대화창
-void gotoxy(int x, int y);   //xy커서 좌표이동
-void Gameover();   //게임오버시 화면
-int limitFoodByStage(int stageNum);
-int itemArray[MAX] = { 4 };
-int front = 3;
-int rear = 3;
-void init_list();
+void consolesize();	//콘솔창 크기 조절 함수
+void ItemScreen();	//아이템 출력부
+void GameMainLoop();	//지렁이 게임 메인 진행 함수
+void StoryScreen();	//스토리 진행 함수
+void Game();	//게임 대화창
+void gotoxy(int x, int y);	//xy커서 좌표이동
+void Gameover();	//게임오버시 화면
+int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
+void lifeScreen(int lifeCount); //목숨 출력부
+void itemInfoScreen(); //아이템 설명 출력 
+void printState(int state); //상태 출력 함수 
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -277,7 +275,6 @@ void StoryScreen(void)
 			printf("  응  : press Y");
 			gotoxy(4, 20);
 			printf("아니 : press N");
-			init_list(); // item list 초기화 함
 
 			key = _getch();
 			if (key == 'y' || key == 'Y')
@@ -336,152 +333,6 @@ void StoryScreen(void)
 		GameMainLoop();
 	}
 }
-
-/* 아이템 목록 관련 큐 추가 */
-
-void init_list()// init 함수로 재시작 시 초기화
-{
-	rear = 3;
-	front = 3;
-}
-void put(int k) // itemArray 큐에 넣음
-{
-
-
-	if (rear - front < 4)
-	{
-		if (rear - front == 3)
-		{
-			//아무것도 하지 않음 3이상 차이나지 않게함
-		}
-		else if (rear - front == 2)
-		{
-			itemArray[rear] = k;
-			gotoxy(48, 18);
-			printf("%d", itemArray[rear]);
-			gotoxy(48, 16);
-			printf("%d", itemArray[rear - 1]);
-			gotoxy(48, 14);
-			printf("%d", itemArray[rear - 2]);
-			rear += 1; // 안해주면 계속 3번 아이템이 바뀜
-
-		}
-		else if (rear - front == 1)
-		{
-			itemArray[rear] = k;
-			gotoxy(48, 18);
-			printf(" ");
-			gotoxy(48, 16);
-			printf("%d", itemArray[rear]);
-			gotoxy(48, 14);
-			printf("%d", itemArray[rear - 1]);
-			rear += 1;
-		}
-		else if (rear - front == 0)
-		{
-			itemArray[rear] = k;
-			gotoxy(48, 18);
-			printf(" ");
-			gotoxy(48, 16);
-			printf(" ");
-			gotoxy(48, 14);
-			printf("%d", itemArray[rear]);
-			rear += 1;
-		}
-	}
-	else //error 확인
-	{
-		gotoxy(48, 2);
-		printf("errer");
-
-	}
-}
-void get() // itemArray 큐에서 빼냄
-{
-	if (rear - front < 4) //계속적으로 쓰지 못하도록 3이내
-	{
-		gotoxy(48, 22);
-		printf("get : %d", itemArray[front]);
-
-
-		//해당 아이템 효과 발동
-
-
-		front += 1;
-	}
-	//다시 바뀐 배열을 프린트함
-
-	if (rear - front == 2)
-	{
-		gotoxy(48, 18);
-		printf(" ");
-		gotoxy(48, 16);
-		printf("%d", itemArray[front + 1]);
-		gotoxy(48, 14);
-		printf("%d", itemArray[front]);
-	}
-	else if (rear - front == 1)
-	{
-		gotoxy(48, 18);
-		printf(" ");
-		gotoxy(48, 16);
-		printf(" ");
-		gotoxy(48, 14);
-		printf("%d", itemArray[front]);
-	}
-	else if (rear - front == 1)
-	{
-		gotoxy(48, 18);
-		printf(" ");
-		gotoxy(48, 16);
-		printf(" ");
-		gotoxy(48, 14);
-		printf(" ");
-	}
-	/*
-	gotoxy(48, 14);
-	printf("%d", itemArray[front+1]); //1번 템
-	gotoxy(48, 16);
-	printf("%d", itemArray[front]);
-	gotoxy(48, 18);
-	printf("%d", itemArray[front-1]);
-	*/
-
-
-}
-
-/*
-void itemCheck() //item check 함수
-{
-int i;
-for (i = 0; i < 4; i++)
-{
-if (itemArray[i] == 0)
-{
-gotoxy(48, 14); //42 11 가 출력
-printf("speed");
-}
-else if (itemArray[i] == 1)
-{
-gotoxy(48, 16);
-printf("A");
-}
-else if (itemArray[i] == 2)
-{
-gotoxy(48, 18);
-printf("B");
-}
-else if (itemArray[i] == 3)
-{
-gotoxy(48, 20);
-printf("C");
-}
-}
-gotoxy(42, 8);
-printf("%d %d %d %d", itemArray[0], itemArray[1], itemArray[2], itemArray[3]); //현재 아이템 목록
-
-}
-*/
 void Gameover()
 {
 	RED
@@ -542,7 +393,7 @@ void Gameover()
 	gotoxy(34, 13);
 	printf("당신은 죽었습니다.");
 	Sleep(1000);
-	//   system("cls");
+	//	system("cls");
 	gotoxy(30, 14);
 	printf("다시하시겠습니까?   Y/N");
 	while (1)
@@ -595,8 +446,6 @@ void GameMainLoop()
 	int NoNewGame = 0;
 	int foodPos[2];
 	int itemPos[2];
-	int foodCount = 0; //스테이지 별 먹이 수 제한 
-	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int izqdeGolemiq = 0;
 	int food_testX = 0;
 	int food_testY = 0;
@@ -608,6 +457,10 @@ void GameMainLoop()
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
+	int foodCount = 0; //스테이지 별 먹이 수 제한 
+	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
+	int lifeCount = 0; //목숨 개수(스테이지별 초기화)
+
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -618,6 +471,8 @@ void GameMainLoop()
 	arraySizeX = arraySizeY;
 
 	ItemScreen();
+	itemInfoScreen();
+
 	arr = malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
 	{
@@ -653,6 +508,8 @@ void GameMainLoop()
 		createItem = 10;  // 아이템이 사라지기 전 움직일 수 있는 최대값
 		stageNum = 1; //임의로 초기화 1탄
 		foodCount = limitFoodByStage(stageNum);
+		lifeCount = 3;
+		lifeScreen(lifeCount);
 
 		if (!ChetemConfig) snakeSize = 3;
 		else snakeSize = INITIAL_SNAKE_SIZE;
@@ -841,24 +698,16 @@ void GameMainLoop()
 				{
 					newItem = 1;
 					izqdeGolemiq = 1;
-
 					//충돌된 아이템에 따라 부여되는 효과 설정
 					switch (selectItem)
 					{
 						//스피드 증가 아이템
 					case 0:
-						put(0); //아이템 확인용 추후 삭제
-						if (Speed < 40) Speed += 2;
+						if (Speed < 40) Speed += 2; printState(1);
 						break;
-					case 1:
-						put(1);
-						break;
-					case 2:
-						put(2);
-						break;
-					case 3:
-						put(3);
-						break;
+					case 1: break;
+					case 2: break;
+					case 3: break;
 					}
 
 				}
@@ -867,22 +716,232 @@ void GameMainLoop()
 				{
 					if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
 					{
-						Dead = 1;
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							//뱀 위치 랜덤설정하는 코드 복붙
+							//추후 함수로 빼서 호출하기 
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
 				else
 				{
 					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
 					{
-						Dead = 1;
+
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
-				/* snake self-impact check */
+				/* snake self-impact check 지렁이가 자신의 몸에 충돌 하는지 검사하는 부분  */
 				if (i != (snakeSize - 1))
 				{
 					if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
 					{
-						Dead = 1;
+						lifeCount--;
+						if (lifeCount < 0)
+							Dead = 1;
+						else {
+							lifeScreen(lifeCount);
+							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+							{
+								if (i == 0)
+								{
+									while (1)
+									{
+										snakePos[i] = 1 + rand() % (arraySizeX - 2);
+										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
+										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
+											break;
+									}
+								}
+								else
+								{
+									if (i == 1)
+									{
+										if (STARTING_DIRECTION == 0)
+											direction_snake = 1 + rand() % 4;
+										else
+											direction_snake = STARTING_DIRECTION;
+										switch (direction_snake)
+										{
+										case 1: /*Right*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] + 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 1;
+											break;
+										case 2:  /*up*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] - 1;
+												j += 2;
+											}
+											snakeDir = 2;
+											break;
+										case 3: /* Left*/
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2] - 1;
+												snakePos[j + 1] = snakePos[j - 1];
+												j += 2;
+											}
+											snakeDir = 3;
+											break;
+										case 4: /*Down */
+											for (j = 2; j < 2 * snakeSize + 1;)
+											{
+												snakePos[j] = snakePos[j - 2];
+												snakePos[j + 1] = snakePos[j - 1] + 1;
+												j += 2;
+											}
+											snakeDir = 4;
+											break;
+
+										}
+									}
+								}
+							}
+							fflush(stdin);
+						}
 					}
 				}
 			}
@@ -940,7 +999,7 @@ void GameMainLoop()
 			{
 				//스피드 증가 아이템
 			case 0:
-				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '&';
 				break;
 			case 1:
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '^';
@@ -983,7 +1042,11 @@ void GameMainLoop()
 					}
 					else if (arr[i * arraySizeX + j] == '+')
 					{
-						printf("♡");
+						printf("♤");
+					}
+					else if (arr[i * arraySizeX + j] == '&')
+					{
+						printf("△");
 					}
 					else if (arr[i * arraySizeX + j] == '^')
 					{
@@ -1034,12 +1097,6 @@ void GameMainLoop()
 					if (Key == 27) break;
 				}
 			}
-			/* 아이템 사용 */
-			if (Key == 'q' || Key == 'Q')
-			{
-				get();
-			}
-
 			if (snakeDir != CurrentDir)
 			{
 				/* if the current direction is left -> we cannot choose right ...*/
@@ -1069,9 +1126,56 @@ int limitFoodByStage(int stageNum) {
 	}
 	return foodCount;
 }
+void lifeScreen(int lifeCount) {
+	switch (lifeCount)
+	{
+	case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
+	case 1: gotoxy(42, 3); printf("■♥■  ■  ■"); break;
+	case 2: gotoxy(42, 3); printf("■♥■♥■  ■"); break;
+	case 3: gotoxy(42, 3); printf("■♥■♥■♥■"); break;
+	default: break;
+	}
+	gotoxy(42, 0);
+	printf("■■■■■■■");
+	gotoxy(42, 1);
+	printf("■ L I F E  ■");
+	gotoxy(42, 2);
+	printf("■■■■■■■");
+	gotoxy(42, 4);
+	printf("■■■■■■■");
 
-void ItemScreen()
-{
+}
+void itemInfoScreen() {
+	gotoxy(58, 0);
+	printf("♤ : 먹이");
+	gotoxy(58, 1);
+	printf("△ : 스피드 업");
+	gotoxy(58, 2);
+	printf("▽ : 스피드 다운");
+	gotoxy(58, 3);
+	printf("● : 지렁이 길이 +1");
+	gotoxy(58, 4);
+	printf("○ : 지렁이 길이 -1");
+	gotoxy(58, 5);
+	printf("◑ : 먹이 먹을 시 +2");
+	gotoxy(58, 6);
+	printf("★ : 무적");
+}
+void printState(int state) {
+	switch (state)
+	{
+		//case 0: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	case 1: gotoxy(42, 9); printf("스피드가 증가 되었습니다.");  break;
+	case 2: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	case 3: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
+	default: break;
+	}
+}
+void ItemScreen() {
+	int itemArray[3]; // add item : item 추후 추가시 문자열 리스트로 변환후 Item Screen 추가 : kdy(색인)
+
+	itemArray[0] = 1;  // item 입력 예시 나중에 문자로 변환 :kdy
+
 	gotoxy(42, 11);
 	printf("■■■■■■■");
 	gotoxy(42, 12);
@@ -1079,7 +1183,7 @@ void ItemScreen()
 	gotoxy(42, 13);
 	printf("■■■■■■■");
 	gotoxy(42, 14);
-	printf("■ 1:       ■");
+	printf("■ 1:  %d    ■", itemArray[0]); //kdy
 	gotoxy(42, 15);
 	printf("■■■■■■■");
 	gotoxy(42, 16);
@@ -1090,11 +1194,7 @@ void ItemScreen()
 	printf("■ 3:       ■");
 	gotoxy(42, 19);
 	printf("■■■■■■■");
-	gotoxy(42, 20);
-	printf("if press q you can use Item");
 }
-
-
 int main()
 {
 
