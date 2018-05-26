@@ -55,6 +55,9 @@ int front = 3;
 int rear = 3;
 int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 				  /////////////////////////////////////////
+int Speed;
+int snakeSize = 3;
+
 
 void Clock()
 {
@@ -433,16 +436,37 @@ void put(int k) // itemArray 큐에 넣음
 
 	}
 }
-void get() // itemArray 큐에서 빼냄
+void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 아이템 지움
 {
-	if (rear - front < 4) //계속적으로 쓰지 못하도록 3이내
+	if (rear - front < 4) // 아이템이 없는데도 계속적으로 쓰지 못하도록 3 이내
 	{
 		gotoxy(48, 22);
-		printf("get : %d", itemArray[front]);
+		printf("get : %d", itemArray[front]); //현재 사용되는 아이템
 
+		if (itemArray[front] <1)
+		{
+			if (Speed < 40)
+			{
+				Speed += 2;
+				gotoxy(46, 21);
+				printf("효과 : 스피드 업!!");
 
-		//해당 아이템 효과 발동
-
+			}
+		}
+		else if (1< itemArray[front] < 3)
+		{
+			if (snakeSize < 50)
+			{
+				snakeSize += 1;
+				gotoxy(46, 21);
+				printf("효과 : 지렁이 길이 +1!!");
+			}
+		}
+		else if (3< itemArray[front] <5)
+		{
+			gotoxy(46, 21);
+			printf("효과 : 나는 무적이다!!");
+		}
 
 		front += 1;
 	}
@@ -870,7 +894,7 @@ void GameMainLoop()
 	int item_testX = 0;
 	int item_testY = 0;
 	int snakePos[100];  //x,y pos for 50 snake elements. If the snake is getting bigger -> malloc for new 10 elements
-	int snakeSize = 3;
+
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
@@ -878,7 +902,6 @@ void GameMainLoop()
 	int lifeCount;
 	int foodCount;
 	int NeedEscape;
-	int Speed;
 
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
@@ -1069,14 +1092,15 @@ void GameMainLoop()
 					switch (selectItem)
 					{
 					case 0: //△ : 스피드 업
-						if (Speed < 40) Speed += 2;
+
+						put(0); //itemArray[]에 번호로 추가
 						break;
 					case 1: //▽ : 스피드 다운
 						if (Speed < 40 && Speed >0) Speed -= 2;
 						break;
 					case 2: //● : 지렁이 길이 +1
-						if (snakeSize < 50)
-							snakeSize++;
+
+						put(2); //itemArray[]에 번호로 추가
 						break;
 					case 3: //○ : 지렁이 길이 -1
 						if (snakeSize < 50 && snakeSize>0)
@@ -1084,6 +1108,7 @@ void GameMainLoop()
 						break;
 					case 4: //★ : 무적
 						shieldItem = 1;
+						put(4); //itemArray[]에 번호로 추가
 						break;
 					}
 
@@ -1315,7 +1340,7 @@ void GameMainLoop()
 			/* 아이템 사용 */
 			if (Key == 'q' || Key == 'Q')
 			{
-				get();
+				get(Speed, snakeSize);
 			}
 
 			if (snakeDir != CurrentDir)
@@ -1470,7 +1495,6 @@ void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int
 }
 int main()
 {
-
 	StartMenu();
 	_getch();
 	return 0;
