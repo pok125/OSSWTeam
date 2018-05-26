@@ -45,6 +45,7 @@ int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
 void init_list(); //item 리스트 재실행시 초기화 
+void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int snakeDir); //지렁이 위치 설정 함수
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -569,7 +570,6 @@ void GameMainLoop()
 	int food_testY = 0;
 	int item_testX = 0;
 	int item_testY = 0;
-	int ChetemConfig = 0;
 	int snakePos[100];  //x,y pos for 50 snake elements. If the snake is getting bigger -> malloc for new 10 elements
 	int snakeSize = 3;
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
@@ -578,11 +578,10 @@ void GameMainLoop()
 	int foodCount = 0; //스테이지 별 먹이 수 제한 
 	int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
 	int lifeCount = 0; //목숨 개수(스테이지별 초기화)
+	int shieldItem = 0; // 무적아이템 유무확인 변수
 
 	COORD pos = { 0, 0 };
 	HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-
-
 
 	Speed = 5;
 	arraySizeY = 20;
@@ -618,10 +617,7 @@ void GameMainLoop()
 		else if (i % arraySizeX == 0) { arr[i] = '|'; }
 		else if (i > arraySizeX * (arraySizeY - 1)) arr[i] = '-';
 		else if (i % arraySizeX == arraySizeX - 1) arr[i] = '|';
-		//else arr[i] = ' '; 
 	}
-
-
 
 	while (1)
 	{ // new game cycle
@@ -640,98 +636,13 @@ void GameMainLoop()
 		foodCount = limitFoodByStage(stageNum);
 		lifeCount = 3;
 		lifeScreen(lifeCount);
-
-		if (!ChetemConfig) snakeSize = 3;
-		else snakeSize = INITIAL_SNAKE_SIZE;
+		snakeSize = 3;
+	
 		z = 24; /* iterator for game life cycle - used to count moves after food appearence         z는 음식이 사라지기 전 움직일 수 있는 최대값*/
 				/* this value should be afunction of the field size - if it si 16 -> then we have to have at least 24 moves before food dissapear*/
 				/* Input validation for speed*/
 
-
-				//while (1)            // 스네이크 speed 설정 부분
-				//{
-				//   system("cls");
-				//   printf("During the game- press ESC to exit.. or DIE !\nSpeed level: (1-40)\n");
-				//   fflush(stdin);
-				//   scanf("%d", &Speed);
-				//   if (Speed > 40) Speed = 40;
-				//   if (!(Speed <= 0)) break; /* challenging levels up to speed = 30*/
-				//}
-
-				//system(cls); 추가하기  - 콘솔창 클리어
-
-
-				/* Initialize snakePos with size 3 */
-				//snakePos[0] = 8;  //    ------------  //Illustration, not actual represntation
-				//snakePos[1] = 8;  //    ------------
-				//snakePos[2] = 9;  //    ----***-----
-				//snakePos[3] = 8;  //    ------------
-				//snakePos[4] = 10;
-				//snakePos[5] = 8;
-
-		for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
-		{
-			if (i == 0)
-			{
-				while (1)
-				{
-					snakePos[i] = 1 + rand() % (arraySizeX - 2);
-					snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
-					if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
-						break;
-				}
-			}
-			else
-			{
-				if (i == 1)
-				{
-					if (STARTING_DIRECTION == 0)
-						direction_snake = 1 + rand() % 4;
-					else
-						direction_snake = STARTING_DIRECTION;
-					switch (direction_snake)
-					{
-					case 1: /*Right*/
-						for (j = 2; j < 2 * snakeSize + 1;)
-						{
-							snakePos[j] = snakePos[j - 2] + 1;
-							snakePos[j + 1] = snakePos[j - 1];
-							j += 2;
-						}
-						snakeDir = 1;
-						break;
-					case 2:  /*up*/
-						for (j = 2; j < 2 * snakeSize + 1;)
-						{
-							snakePos[j] = snakePos[j - 2];
-							snakePos[j + 1] = snakePos[j - 1] - 1;
-							j += 2;
-						}
-						snakeDir = 2;
-						break;
-					case 3: /* Left*/
-						for (j = 2; j < 2 * snakeSize + 1;)
-						{
-							snakePos[j] = snakePos[j - 2] - 1;
-							snakePos[j + 1] = snakePos[j - 1];
-							j += 2;
-						}
-						snakeDir = 3;
-						break;
-					case 4: /*Down */
-						for (j = 2; j < 2 * snakeSize + 1;)
-						{
-							snakePos[j] = snakePos[j - 2];
-							snakePos[j + 1] = snakePos[j - 1] + 1;
-							j += 2;
-						}
-						snakeDir = 4;
-						break;
-
-					}
-				}
-			}
-		}
+		SetCharacterPosition(snakePos, snakeSize, 2, snakeDir); // 뱀 고정 위치 설정
 		fflush(stdin);
 
 		while (1)
@@ -749,7 +660,6 @@ void GameMainLoop()
 			/* Create the frame arraySizeX * arraySizeY */
 			for (i = 0; i < arraySizeX * arraySizeY; i++)  //맵 가장자리 생성
 			{
-
 				if (i < arraySizeX) arr[i] = '-';             //맨 위쪽 벽
 				else if (i % arraySizeX == 0) { arr[i] = '|'; } //왼쪽 벽
 				else if (i > arraySizeX * (arraySizeY - 1)) arr[i] = '-'; //맨아래 벽
@@ -846,6 +756,7 @@ void GameMainLoop()
 							snakeSize--;
 						break;
 					case 4: //★ : 무적
+						shieldItem = 1;
 						break;
 					}
 
@@ -855,77 +766,23 @@ void GameMainLoop()
 				{
 					if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
 					{
-						lifeCount--;
-						if (lifeCount < 0)
-							Dead = 1;
-						else {
-							lifeScreen(lifeCount);
-							//뱀 위치 랜덤설정하는 코드 복붙
-							//추후 함수로 빼서 호출하기 
-							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
-							{
-								if (i == 0)
-								{
-									while (1)
-									{
-										snakePos[i] = 1 + rand() % (arraySizeX - 2);
-										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
-										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
-											break;
-									}
-								}
-								else
-								{
-									if (i == 1)
-									{
-										if (STARTING_DIRECTION == 0)
-											direction_snake = 1 + rand() % 4;
-										else
-											direction_snake = STARTING_DIRECTION;
-										switch (direction_snake)
-										{
-										case 1: /*Right*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] + 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 1;
-											break;
-										case 2:  /*up*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] - 1;
-												j += 2;
-											}
-											snakeDir = 2;
-											break;
-										case 3: /* Left*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] - 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 3;
-											break;
-										case 4: /*Down */
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] + 1;
-												j += 2;
-											}
-											snakeDir = 4;
-											break;
-
-										}
-									}
-								}
+						if (shieldItem)
+						{
+							shieldItem = 0;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						}
+						else
+						{
+							lifeCount--;
+							if (lifeCount < 0)
+								Dead = 1;
+							else {
+								lifeScreen(lifeCount);
+								//뱀 위치 랜덤설정하는 코드 복붙
+								//추후 함수로 빼서 호출하기 
+								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+								fflush(stdin);
 							}
-							fflush(stdin);
 						}
 					}
 				}
@@ -934,75 +791,23 @@ void GameMainLoop()
 					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
 					{
 
-						lifeCount--;
-						if (lifeCount < 0)
-							Dead = 1;
-						else {
-							lifeScreen(lifeCount);
-							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
-							{
-								if (i == 0)
-								{
-									while (1)
-									{
-										snakePos[i] = 1 + rand() % (arraySizeX - 2);
-										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
-										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
-											break;
-									}
-								}
-								else
-								{
-									if (i == 1)
-									{
-										if (STARTING_DIRECTION == 0)
-											direction_snake = 1 + rand() % 4;
-										else
-											direction_snake = STARTING_DIRECTION;
-										switch (direction_snake)
-										{
-										case 1: /*Right*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] + 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 1;
-											break;
-										case 2:  /*up*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] - 1;
-												j += 2;
-											}
-											snakeDir = 2;
-											break;
-										case 3: /* Left*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] - 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 3;
-											break;
-										case 4: /*Down */
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] + 1;
-												j += 2;
-											}
-											snakeDir = 4;
-											break;
-
-										}
-									}
-								}
+						if (shieldItem)
+						{
+							shieldItem = 0;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						}
+						else
+						{
+							lifeCount--;
+							if (lifeCount < 0)
+								Dead = 1;
+							else {
+								lifeScreen(lifeCount);
+								//뱀 위치 랜덤설정하는 코드 복붙
+								//추후 함수로 빼서 호출하기 
+								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+								fflush(stdin);
 							}
-							fflush(stdin);
 						}
 					}
 				}
@@ -1016,69 +821,7 @@ void GameMainLoop()
 							Dead = 1;
 						else {
 							lifeScreen(lifeCount);
-							for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
-							{
-								if (i == 0)
-								{
-									while (1)
-									{
-										snakePos[i] = 1 + rand() % (arraySizeX - 2);
-										snakePos[2 * i + 1] = 1 + rand() % (arraySizeX - 2);
-										if ((snakePos[i] - (snakeSize + 1)) > 0 && (snakePos[i] + (snakeSize + 1)) < arraySizeX && (snakePos[2 * i + 1] - (snakeSize + 1)) > 0 && (snakePos[2 * i + 1] + (snakeSize + 1)) < arraySizeX)
-											break;
-									}
-								}
-								else
-								{
-									if (i == 1)
-									{
-										if (STARTING_DIRECTION == 0)
-											direction_snake = 1 + rand() % 4;
-										else
-											direction_snake = STARTING_DIRECTION;
-										switch (direction_snake)
-										{
-										case 1: /*Right*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] + 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 1;
-											break;
-										case 2:  /*up*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] - 1;
-												j += 2;
-											}
-											snakeDir = 2;
-											break;
-										case 3: /* Left*/
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2] - 1;
-												snakePos[j + 1] = snakePos[j - 1];
-												j += 2;
-											}
-											snakeDir = 3;
-											break;
-										case 4: /*Down */
-											for (j = 2; j < 2 * snakeSize + 1;)
-											{
-												snakePos[j] = snakePos[j - 2];
-												snakePos[j + 1] = snakePos[j - 1] + 1;
-												j += 2;
-											}
-											snakeDir = 4;
-											break;
-
-										}
-									}
-								}
-							}
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 							fflush(stdin);
 						}
 					}
@@ -1116,17 +859,6 @@ void GameMainLoop()
 			{
 				arr[snakePos[2 * i + 1] * arraySizeX + snakePos[2 * i]] = '*';  // 뱀 모양
 			}
-
-			/* Create the frame arraySizeX * arraySizeY */
-			//for (i = 0; i < arraySizeX * arraySizeY; i++)
-			//{
-
-			//   if (i < arraySizeX) arr[i] = '-';
-			//   else if (i % arraySizeX == 0) { arr[i] = '|'; }
-			//   else if (i > arraySizeX * (arraySizeY - 1)) arr[i] = '-';
-			//   else if (i % arraySizeX == arraySizeX - 1) arr[i] = '|';
-			//   //else arr[i] = ' ';
-			//}
 
 			/* Put the food on the matrix */
 			if (foodPos[0] == 0 && foodPos[1] == 0)
@@ -1340,6 +1072,65 @@ void ItemScreen()
 	printf("■■■■■■■");
 	gotoxy(42, 20);
 	printf("if press q you can use Item");
+}
+void SetCharacterPosition(int *snakePos, int snakeSize,int direction_snake,int snakeDir)
+{
+	int i, j;
+	for (i = 0; i < snakeSize; i++)   //뱀 위치 랜덤 설정
+	{
+		if (i == 0)
+		{
+			snakePos[i] = 10;
+			snakePos[2 * i + 1] = 13;
+				
+		}
+		else
+		{
+			if (i == 1)
+			{
+				switch (direction_snake)
+				{
+				case 1: /*Right*/
+					for  (j = 2; j < 2 * snakeSize + 1;)
+					{
+						snakePos[j] = snakePos[j - 2] + 1;
+						snakePos[j + 1] = snakePos[j - 1];
+						j += 2;
+					}
+					snakeDir = 1;
+					break;
+				case 2:  /*up*/
+					for (j = 2; j < 2 * snakeSize + 1;)
+					{
+						snakePos[j] = snakePos[j - 2];
+						snakePos[j + 1] = snakePos[j - 1] - 1;
+						j += 2;
+					}
+					snakeDir = 2;
+					break;
+				case 3: /* Left*/
+					for (j = 2; j < 2 * snakeSize + 1;)
+					{
+						snakePos[j] = snakePos[j - 2] - 1;
+						snakePos[j + 1] = snakePos[j - 1];
+						j += 2;
+					}
+					snakeDir = 3;
+					break;
+				case 4: /*Down */
+					for (j = 2; j < 2 * snakeSize + 1;)
+					{
+						snakePos[j] = snakePos[j - 2];
+						snakePos[j + 1] = snakePos[j - 1] + 1;
+						j += 2;
+					}
+					snakeDir = 4;
+					break;
+
+				}
+			}
+		}
+	}
 }
 int main()
 {
