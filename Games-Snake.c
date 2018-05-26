@@ -41,6 +41,7 @@ int limitFoodByStage(int stageNum);
 int itemArray[MAX] = { 4 };
 int front = 3;
 int rear = 3;
+void init_list();
 
 void consolesize() {
 	//char command[COMMAND_SIZE] = { '\0', };
@@ -276,6 +277,7 @@ void StoryScreen(void)
 			printf("  응  : press Y");
 			gotoxy(4, 20);
 			printf("아니 : press N");
+			init_list(); // item list 초기화 함
 
 			key = _getch();
 			if (key == 'y' || key == 'Y')
@@ -337,11 +339,16 @@ void StoryScreen(void)
 
 /* 아이템 목록 관련 큐 추가 */
 
+void init_list()// init 함수로 재시작 시 초기화
+{
+	rear = 3;
+	front = 3;
+}
 void put(int k) // itemArray 큐에 넣음
 {
 
 
-	if (rear - front < 3) //front3 rear 3
+	if (rear - front < 4)
 	{
 		if (rear - front == 3)
 		{
@@ -352,30 +359,95 @@ void put(int k) // itemArray 큐에 넣음
 			itemArray[rear] = k;
 			gotoxy(48, 18);
 			printf("%d", itemArray[rear]);
-			rear += 1;
+			gotoxy(48, 16);
+			printf("%d", itemArray[rear - 1]);
+			gotoxy(48, 14);
+			printf("%d", itemArray[rear - 2]);
+			rear += 1; // 안해주면 계속 3번 아이템이 바뀜
 
 		}
 		else if (rear - front == 1)
 		{
 			itemArray[rear] = k;
+			gotoxy(48, 18);
+			printf(" ");
 			gotoxy(48, 16);
 			printf("%d", itemArray[rear]);
+			gotoxy(48, 14);
+			printf("%d", itemArray[rear - 1]);
 			rear += 1;
 		}
 		else if (rear - front == 0)
 		{
 			itemArray[rear] = k;
+			gotoxy(48, 18);
+			printf(" ");
+			gotoxy(48, 16);
+			printf(" ");
 			gotoxy(48, 14);
 			printf("%d", itemArray[rear]);
 			rear += 1;
 		}
 	}
+	else //error 확인
+	{
+		gotoxy(48, 2);
+		printf("errer");
+
+	}
 }
 void get() // itemArray 큐에서 빼냄
 {
-	//gotoxy(42, 3);
-	//printf("%d", itemArray[front]);
-	front += 1;
+	if (rear - front < 4) //계속적으로 쓰지 못하도록 3이내
+	{
+		gotoxy(48, 22);
+		printf("get : %d", itemArray[front]);
+
+
+		//해당 아이템 효과 발동
+
+
+		front += 1;
+	}
+	//다시 바뀐 배열을 프린트함
+
+	if (rear - front == 2)
+	{
+		gotoxy(48, 18);
+		printf(" ");
+		gotoxy(48, 16);
+		printf("%d", itemArray[front + 1]);
+		gotoxy(48, 14);
+		printf("%d", itemArray[front]);
+	}
+	else if (rear - front == 1)
+	{
+		gotoxy(48, 18);
+		printf(" ");
+		gotoxy(48, 16);
+		printf(" ");
+		gotoxy(48, 14);
+		printf("%d", itemArray[front]);
+	}
+	else if (rear - front == 1)
+	{
+		gotoxy(48, 18);
+		printf(" ");
+		gotoxy(48, 16);
+		printf(" ");
+		gotoxy(48, 14);
+		printf(" ");
+	}
+	/*
+	gotoxy(48, 14);
+	printf("%d", itemArray[front+1]); //1번 템
+	gotoxy(48, 16);
+	printf("%d", itemArray[front]);
+	gotoxy(48, 18);
+	printf("%d", itemArray[front-1]);
+	*/
+
+
 }
 
 /*
@@ -962,6 +1034,12 @@ void GameMainLoop()
 					if (Key == 27) break;
 				}
 			}
+			/* 아이템 사용 */
+			if (Key == 'q' || Key == 'Q')
+			{
+				get();
+			}
+
 			if (snakeDir != CurrentDir)
 			{
 				/* if the current direction is left -> we cannot choose right ...*/
@@ -1012,6 +1090,8 @@ void ItemScreen()
 	printf("■ 3:       ■");
 	gotoxy(42, 19);
 	printf("■■■■■■■");
+	gotoxy(42, 20);
+	printf("if press q you can use Item");
 }
 
 
