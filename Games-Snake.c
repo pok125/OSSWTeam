@@ -1674,7 +1674,7 @@ void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int
 
 int main()
 {
-	GameMainLoop();
+
 	StartMenu();
 	_getch();
 	return 0;
