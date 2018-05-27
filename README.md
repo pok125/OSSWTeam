@@ -29,7 +29,7 @@
 </p>
 Pacman is a game of eating all the dot while running away from the ghost.
 
-## License
+## 
 Follows [GPL v3](http://blog.naver.com/dbvlfflsk7/221285300632)
 
 ## Library
