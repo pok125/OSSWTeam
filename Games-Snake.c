@@ -48,7 +48,7 @@ int PCX = 2;	//주인공 좌표X
 int PCY = 4;	//주인공 좌표Y
 int second = 0;	//초받아오는 변수
 int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
-int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
+int itemArray[MAX] = { 6 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
 int stageNum = 1; //스테이지 구별 변수 
@@ -470,7 +470,7 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 				snakeSize += 1;
 				gotoxy(46, 21);
 				printf("효과 : 지렁이 길이 +1!!");
-				printf("%d", itemArray[front]);
+				// 몇이 들어갔는지 확인용 printf("%d", itemArray[front]);
 			}
 		}
 		else if (3< itemArray[front]<5) // 왜인지 에러
@@ -970,15 +970,21 @@ void GameMainLoop()
 	gotoxy(58, 0);
 	printf("♤ : 먹이");
 	gotoxy(58, 1);
-	printf("△ : 스피드 업 (Q 입력 시 사용가능)");
+	printf("△,0 : 스피드 업 (Q 입력 시 사용가능)");
 	gotoxy(58, 2);
 	printf("▽ : 스피드 다운");
 	gotoxy(58, 3);
-	printf("● : 지렁이 길이 +1 (Q 입력 시 사용가능)");
+	printf("●,2 : 지렁이 길이 +1 (Q 입력 시 사용가능)");
 	gotoxy(58, 4);
 	printf("○ : 지렁이 길이 -1");
 	gotoxy(58, 5);
-	printf("★ : 무적 (Q 입력 시 사용가능)");
+	printf("★,4 : 무적 (Q 입력 시 사용가능)");
+	gotoxy(58, 6);
+	printf("■ : 생명 -1 ");
+	gotoxy(58, 7);
+	printf("♬ : 생명 3 이하일 경우 생명 추가");
+	gotoxy(58, 8);
+	printf("@ : 2탄 부터 움직이는 적 등장!");
 
 	arr = (char*)malloc(arraySizeX * arraySizeY * sizeof(char));            //메모리값 오류
 	if (arr == NULL)
@@ -1162,6 +1168,8 @@ void GameMainLoop()
 						if (lifeCount<3)
 						{
 							lifeCount++;
+							gotoxy(58, 9);
+							printf("♥이 추가 되었어요!!");
 						}
 						break;
 

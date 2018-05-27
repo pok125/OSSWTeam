@@ -1,7 +1,7 @@
 # OSSWTeam
-<h3 align="center">Pacman</h3>
+<h3 align="center">하수구 탈출 게임</h3>
 <p align="center">
-    Existing Pacman game implementation and upgrade to 3D.
+    c언어
 </p>
 
 
@@ -13,10 +13,9 @@
 - [How to play](#how-to-play)
 - [How to contribute](#how-to-contribute)
 
-
 ## Execution screen
 <p align="center">
-<img src="http://postfiles8.naver.net/MjAxNzA2MDRfMTE3/MDAxNDk2NTQ2MTc2NjQ4.gXaIFK-yC3rMfRTDy_43ZP3KbrKTSxqFJJ5tbNy1tE8g.8oG73T9aIQMTlHITgmLHpLqQTUKc4sOQbrNXy0pzfH8g.GIF.ekdud014/sinul.gif?type=w2" width=550 height=500></img>
+<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=550 height=500></img>
 <a href="https://youtu.be/BbxKEIPWkfY">
 <img src="https://cloud.githubusercontent.com/assets/26589887/26737351/a8c58fcc-4804-11e7-87e5-db4c47cc8818.png"  height=500></img>
 </a>
@@ -24,10 +23,9 @@
 Pacman is a game of eating all the dot while running away from the ghost.
 
 ## License
-Follows [GPL v3](https://github.com/ekdud014/OSS_pacman/blob/master/LICENSE.txt)
+Open-source under Apache 2.0 license. [Follows Apach3.0]
+(#https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29)
 
-## Library
-We use library [SDL](https://www.libsdl.org/) 1.2 (with SDL Mixer) & [OpenGL](https://www.opengl.org/)
 
 ## Execution environment
 It works in compiler C++11. (If you use Visual Studio, you must use Visual Studio 2011 or later.)
@@ -90,14 +88,3 @@ Contact us here.
 - Sound file is from http://www.classicgaming.cc/classics/pac-man/sounds
 - HTML: ["Interphase"](https://templated.co/interphase) by [Templated](https://twitter.com/templatedco) is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/2.0/)/ Modified contents of title, header, main, footer and banner.
 
-
-
-# License 
-Open-source under Apache 2.0 license. https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29
- 프로그램 소개 및 활용범위 (REEADME)
- 디렉토리/파일 구조도 및 설명 (FILES)
- 프로그램 설치 방법 (INSTALL)
- SW옵션 및 사용법 (USAGE)
- 운영에 관련된 FAQ (FAQ)
- SW 변경 사항 (CHANGE)
- 소스코드 저작권 표시 (LICENSE)
