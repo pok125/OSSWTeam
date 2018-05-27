@@ -6,31 +6,25 @@
 
 
 ## Table of contents
- 프로그램 소개 및 활용범위 (REEADME)
- 디렉토리/파일 구조도 및 설명 (FILES)
- 프로그램 설치 방법 (INSTALL)
- SW옵션 및 사용법 (USAGE)
- 운영에 관련된 FAQ (FAQ)
- SW 변경 사항 (CHANGE)
- 소스코드 저작권 표시 (LICENSE)
-- [실행 화면](#)
-- [라이센스](#license)
-- [개발 환경](#execution-environment)
-- [게임실행 방법](#how-to-play)
-- [기여 방법](#how-to-contribute)
+- [Execution screen](#execution-screen)
+- [License](#license)
+- [Execution environment](#execution-environment)
+- [How to execute](#how-to-execute)
+- [How to play](#how-to-play)
+- [How to contribute](#how-to-contribute)
 
-
-## 실행 화면
+## Execution screen
 <p align="center">
-<img src="https://postfiles.pstatic.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=550 height=500></img>
+<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=550 height=500></img>
 <a href="https://youtu.be/BbxKEIPWkfY">
 <img src="https://cloud.githubusercontent.com/assets/26589887/26737351/a8c58fcc-4804-11e7-87e5-db4c47cc8818.png"  height=500></img>
 </a>
 </p>
 Pacman is a game of eating all the dot while running away from the ghost.
 
-## 라이센스
-Follows [GPL v3](http://blog.naver.com/dbvlfflsk7/221285300632)
+## License
+Open-source under Apache 2.0 license. [Follows Apach3.0]
+(#https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29)
 
 
 ## Execution environment
@@ -93,9 +87,4 @@ Contact us here.
 ## Source
 - Sound file is from http://www.classicgaming.cc/classics/pac-man/sounds
 - HTML: ["Interphase"](https://templated.co/interphase) by [Templated](https://twitter.com/templatedco) is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/2.0/)/ Modified contents of title, header, main, footer and banner.
-
-
-
-# License 
-Open-source under Apache 2.0 license. https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29
 
