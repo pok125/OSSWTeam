@@ -24,7 +24,7 @@
 Pacman is a game of eating all the dot while running away from the ghost.
 
 ## License
-Follows [GPL v3](https://github.com/ekdud014/OSS_pacman/blob/master/LICENSE.txt)
+Follows [GPL v3](http://blog.naver.com/dbvlfflsk7/221285300632)
 
 ## Library
 We use library [SDL](https://www.libsdl.org/) 1.2 (with SDL Mixer) & [OpenGL](https://www.opengl.org/)
