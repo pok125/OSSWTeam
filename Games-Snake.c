@@ -51,6 +51,7 @@ int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함�
 int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
+
 int stageNum = 3; //스테이지 구별 변수 
 int Speed;
 int snakeSize = 3;
@@ -916,6 +917,7 @@ void GameMainLoop()
 	int lifeCount;
 	int foodCount;
 	int NeedEscape;		//탈출에 필요한 먹이갯수
+
 	int lifeonecheck; //라이프소진후 1초간무적
 	COORD curPos;
 
@@ -924,8 +926,6 @@ void GameMainLoop()
 	int MoveLimit = 0;	//npc랜덤 하게 움직임
 	int timecheck = 0;	//방향 움직임 시간체크
 	int NPCDA = 0;		//NPC 감지거리
-
-
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
 
@@ -945,6 +945,7 @@ void GameMainLoop()
 		NeedEscape = 7;
 		Speed = 5;
 		z = 20;
+
 		NPCDA = 8;
 	}
 	else if (stageNum == 3)
@@ -959,11 +960,13 @@ void GameMainLoop()
 	else if (stageNum == 4)
 	{
 		lifeCount = 1; //목숨 개수(스테이지별 초기화)
+
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 12;
 		Speed = 9;
 		z = 14;
 		NPCDA = 12;
+
 	}
 
 	ItemScreen();
@@ -1010,6 +1013,7 @@ void GameMainLoop()
 
 
 		lifeonecheck = 0;
+
 		Dead = 0;
 		CurrentDir = 0;
 		CheckFoodCoord = 0;
@@ -1021,8 +1025,6 @@ void GameMainLoop()
 		snakeSize = 3;
 		SetCharacterPosition(snakePos, snakeSize, 2, snakeDir); // 뱀 고정 위치 설정
 		for (j = 0; j < 100; j++) snakePos[j] = 1; //스네이크 포지션 1로 초기화
-
-
 
 		while (1)
 		{
@@ -1177,12 +1179,14 @@ void GameMainLoop()
 						}
 						else
 						{
+
 							if (lifeonecheck == 0)
 							{
 								lifeCount--;
 								snakeDir = 1;
 								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 							}
+
 
 						}
 					}
@@ -1198,8 +1202,6 @@ void GameMainLoop()
 							snakeDir = 1;
 							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 						}
-
-
 					}
 				}
 			}
@@ -1337,6 +1339,14 @@ void GameMainLoop()
 				}
 				printf("\n");
 			}
+			switch (lifeCount)
+			{
+			case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
+			case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
+			case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
+			case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
+			default: break;
+			}
 
 			/////////////////적 캐릭터 구현부///////////////////////////////////
 			if (stageNum > 1)
@@ -1471,7 +1481,6 @@ void GameMainLoop()
 					}
 				}
 			}
-
 			///////////////////////////////////
 
 
@@ -1483,6 +1492,7 @@ void GameMainLoop()
 			case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
 			default: break;
 			}
+
 
 
 			/* 죽음시 break로 탈출,키보드로 뱀 이동*/
