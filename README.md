@@ -66,8 +66,8 @@ Windows 10  ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo
 7) 먹이 일정개수 이상 생성되지 않으므로 유의! (스테이지별로 일정개수 감소로 난이도 조절)
 
 
-
-
+</br>
+</br>
 아이템 설명 
 * ♤ : 먹이 ->먹으면 지렁이 길이 +1
 
