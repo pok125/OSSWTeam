@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-<img src="http://postfiles16.naver.net/MjAxODA1MjdfNzQg/MDAxNTI3NDMwODA0MTc3.2w--SURcR_AmZjLwgn6CLLdaAHR_3S_0QH15rUpcLg4g.jxxzu2xl-gBnIeHZcphEmoWbab8Pk8wc4Hlcl6Kd6WQg.PNG.dbvlfflsk7/story1.PNG?type=w2" width=700 height=500></img>
+<img src="http://postfiles6.naver.net/MjAxODA1MjdfMTc4/MDAxNTI3NDMwNzcxODA2.SKh4ZKwOYGOywcj0xa2KizWa8-97Lz68iwBh-UT1X0Yg.VHM19AdsfM3Z0gWImEZ5QlpVOuhGcinSOmDjWoMRjZ0g.PNG.dbvlfflsk7/gameScreen.PNG?type=w2" width=700 height=500></img>
 </br>
 <게임 실행 화면>
 </p>
