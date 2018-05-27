@@ -69,7 +69,7 @@ Windows 10  ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo
 </br>
 </br>
 </br>
-아이템 설명</br> </br>
+## 아이템 설명
 * ♤ : 먹이 ->먹으면 지렁이 길이 +1
 
 * @ : 움직이는 AI 지렁이 (2탄부터 등장)
@@ -106,8 +106,8 @@ git bash를 사용한 기여 방법 </br>
 </br>
 </br>
 </br>
-Contributer's Infomation</br>
-</br>
+## Contributer's Infomation
+
 **이광호 (Team leader)**  
 
 * <pokljh0411@naver.com>
