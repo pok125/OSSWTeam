@@ -95,7 +95,7 @@ https://github.com/astral2156/Games-Snake
 
 ## How to contribute
 
-git bash를 사용한 기여 방법 
+git bash를 사용한 기여 방법 </br>
 1) 프로젝트를 fork 한다.
 
 2) git bash 프로그램 실행 후 저장소 clone
@@ -104,8 +104,11 @@ git bash를 사용한 기여 방법
 
 4) remote 저장소로 pull request 요청
 
-
-Contributer's Infomation
+</br>
+</br>
+</br>
+Contributer's Infomation</br>
+</br>
 **이광호 (Team leader)**  
 
 * <pokljh0411@naver.com>
