@@ -105,7 +105,4 @@ Contributer's Infomation
 * <qpab7722@gamil.com>
 * https://github.com/qpab7722
 
-## Source
-- Sound file is from http://www.classicgaming.cc/classics/pac-man/sounds
-- HTML: ["Interphase"](https://templated.co/interphase) by [Templated](https://twitter.com/templatedco) is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/2.0/)/ Modified contents of title, header, main, footer and banner.
 
