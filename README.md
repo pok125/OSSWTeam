@@ -15,7 +15,7 @@
 
 ## Execution screen
 <p align="center">
-<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=550 height=500></img>
+<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=700 height=500></img>
 
 </p>
 
