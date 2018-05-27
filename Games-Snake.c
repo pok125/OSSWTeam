@@ -38,8 +38,6 @@ void CursorHide();	//커서 숨기는 함수
 void PCKeyInput();	//캐릭터 키보드 함수
 void Clock();	//시스템 시간받아오는 함수
 void Gamesetting();	//게임 기본세팅함수
-void lifeScreen(int lifeCount); //목숨 출력부
-void printState(int state); //상태 출력 함수
 void init_list(); //item 리스트 재실행시 초기화 
 void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int snakeDir); //지렁이 위치 설정 함수
 																							////////////////////////////////////////////////////////////
@@ -50,14 +48,13 @@ int PCX = 2;	//주인공 좌표X
 int PCY = 4;	//주인공 좌표Y
 int second = 0;	//초받아오는 변수
 int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함수
-int itemArray[MAX] = { 6 }; //item 입력 받는 리스트
+int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
 int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
-				  /////////////////////////////////////////
 int Speed;
 int snakeSize = 3;
-
+/////////////////////////////////////////
 
 void Clock()
 {
@@ -116,7 +113,7 @@ void PCKeyInput() {
 void consolesize()
 {
 	system("title SewerEscape");   //실행창 이름 바꾸기
-	system("mode con:cols=100 lines=30");
+	system("mode con:cols=100 lines=30");	//콘솔창 크기 조절
 }
 
 
@@ -179,7 +176,6 @@ void StartMenu()
 
 	Sleep(1000);
 	RED
-		//	gotoxy(0, 0);
 		printf("                                                                                              \n");
 	printf("                                                                                              \n");
 	printf("      ■■■■     ■             ■        ■■■■■■        ■■■■■ ■       ■■■■      \n");
@@ -227,12 +223,12 @@ void StartMenu()
 			printf("");
 			key = _getch();
 			printf(" ");
-			switch (key)
+			switch (key) //방향키로 이동
 			{
-			case 72:     //방향키로 바꿔야함
+			case 72:
 				if (y > 18) y--;
 				break;
-			case 80:     //얘도
+			case 80:
 				if (y < 20) y++;
 				break;
 			case 13:
@@ -254,9 +250,7 @@ void StartMenu()
 					Sleep(1000);
 				}
 				system("cls");
-				//handlecount = 1;
 				StoryScreen();
-				////////////////////////////////////////게임 시작되야되는 부분
 				break;
 			case 1:
 				gotoxy(53, 23);
@@ -299,7 +293,7 @@ void StoryScreen()
 			gotoxy(4, 15);
 			printf("너 길가다가 하수구에 빠진거 기억 안나?\n");
 			gotoxy(4, 16);
-			printf("그러길래 술 적당히 마시지 그랬어...;; ");
+			printf("술 적당히 마시지 그랬어...;; ");
 			gotoxy(4, 17);
 			printf("하수구를 나가려면 게임을 클리어 해야해! ");
 
@@ -356,7 +350,7 @@ void StoryScreen()
 			gotoxy(4, 15);
 			printf("싫다고? 그럼 죽어!\n");
 			gotoxy(4, 16);
-			printf("농담이고 싫어도 해야해!\n");
+			printf("농담이고 싫어도 나가려면 해야해!\n");
 			gotoxy(4, 17);
 			printf("게임에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
 			gotoxy(4, 18);
@@ -372,9 +366,8 @@ void StoryScreen()
 		}
 	}
 
-	if (PrintCount == 5) {
-
-		//	system("cls");
+	if (PrintCount == 5)
+	{
 		MainStation();
 	}
 }
@@ -785,7 +778,7 @@ void MainStation()
 				gotoxy(22, 3);
 				printf("하면 탈출 할수 있을거야");
 				gotoxy(22, 4);
-				printf("★에 가면 다음게임을 할수있어");
+				printf("★에 가면 게임을 할수있어");
 				gotoxy(22, 5);
 				printf("죽지 않게 조심해!");
 				TalkCheck = 1;
@@ -873,13 +866,12 @@ void GameMainLoop()
 	int CurrentDir = 0;
 	int direction_snake = 0;
 	int Dead = 0;
-	int i, j, z, createItem;
+	int i, j, z, createItem;	//z는 음식이 사라지기 전 움직일 수 있는 최대값
 	char *arr = NULL;
 	int CheckFoodCoord = 0;
 	int CheckItemCoord = 0;
-	char unused[30];
-	int arraySizeX = 20;
-	int arraySizeY = 20;
+	int arraySizeX = 16;
+	int arraySizeY = 16;
 	int newFood = 1;
 	int NoNewGame = 0;
 	int foodPos[2];
@@ -889,44 +881,50 @@ void GameMainLoop()
 	int food_testY = 0;
 	int item_testX = 0;
 	int item_testY = 0;
-	int snakePos[100];  //x,y pos for 50 snake elements. If the snake is getting bigger -> malloc for new 10 elements
-
-	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu */
+	int snakePos[100];  //스네이크길이 최대 50으로 제한
+	int snakeDir = 1; /* 1 - 오른쪽, 2 - 위, 3 -왼쪽, 4, 아래 값에 따라 스네이크가 출발하는 방향 초기설정*/
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
 	int shieldItem = 0; // 무적아이템 유무확인 변수
 	int lifeCount;
 	int foodCount;
-	int NeedEscape;
+	int NeedEscape;		//탈출에 필요한 먹이갯수
 
+
+	arraySizeY = 20;
+	arraySizeX = arraySizeY;
 
 	if (stageNum == 1)
 	{
-		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		lifeCount = 4; //목숨 개수(스테이지별 초기화)
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 5;
 		Speed = 3;
+		z = 24;
 	}
 	else if (stageNum == 2)
 	{
-		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		lifeCount = 4; //목숨 개수(스테이지별 초기화)
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 7;
 		Speed = 5;
+		z = 20;
 	}
 	else if (stageNum == 3)
 	{
-		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		lifeCount = 4; //목숨 개수(스테이지별 초기화)
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 9;
 		Speed = 7;
+		z = 16;
 	}
 	else if (stageNum == 4)
 	{
-		lifeCount = 0; //목숨 개수(스테이지별 초기화)
+		lifeCount = 4; //목숨 개수(스테이지별 초기화)
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 12;
 		Speed = 9;
+		z = 14;
 	}
 
 	ItemScreen();
@@ -950,7 +948,7 @@ void GameMainLoop()
 	}
 
 	for (i = 0; i < arraySizeX * arraySizeY; i++) arr[i] = ' '; //맵 공백 초기화
-																/* Create the frame arraySizeX * arraySizeY */
+																// XY벽 생성 
 	for (i = 0; i < arraySizeX * arraySizeY; i++)
 	{
 
@@ -959,30 +957,30 @@ void GameMainLoop()
 		else if (i > arraySizeX * (arraySizeY - 1)) arr[i] = '-';
 		else if (i % arraySizeX == arraySizeX - 1) arr[i] = '|';
 	}
+	gotoxy(42, 0);
+	printf("■■■■■■■");
+	gotoxy(42, 1);
+	printf("■ L I F E  ■");
+	gotoxy(42, 2);
+	printf("■■■■■■■");
+	gotoxy(42, 4);
+	printf("■■■■■■■");
 
-	while (1)
-	{ // new game cycle
-		srand(time(NULL));
-		for (j = 0; j < 100; j++) snakePos[j] = 1; //스네이크 포지션 1로 초기화
+	while (1)	//게임 사이클 시작부분
+	{ 
+
+
 		Dead = 0;
-		NoNewGame = 0;
 		CurrentDir = 0;
 		CheckFoodCoord = 0;
 		izqdeGolemiq = 0;
 		newFood = 1;
-		snakeDir = 1;
 		Key = 0;
 		createItem = 10;  // 아이템이 사라지기 전 움직일 수 있는 최대값
-		stageNum = 1; //임의로 초기화 1탄
 		foodCount = limitFoodByStage(stageNum);
-		lifeCount = 3;
-		lifeScreen(lifeCount);
 		snakeSize = 3;
-
-		z = 24; //z는 음식이 사라지기 전 움직일 수 있는 최대값
-
 		SetCharacterPosition(snakePos, snakeSize, 2, snakeDir); // 뱀 고정 위치 설정
-		fflush(stdin);
+		for (j = 0; j < 100; j++) snakePos[j] = 1; //스네이크 포지션 1로 초기화
 
 		while (1)
 		{
@@ -990,9 +988,10 @@ void GameMainLoop()
 
 			z--;
 			createItem--;
+
 			if (z == 0) newFood = 1;
 			if (createItem == 0) newItem = 1;
-			// z가 25번 넘어가면 음식 다시생기게하는 부분
+			// z값의 한계치가 넘어가면 음식 다시생기게하는 부분
 
 			gotoxy(2, 20);
 			printf("%d : 탈출까지 길어져야 하는 목표 갯수", NeedEscape - snakeSize + 3);
@@ -1011,8 +1010,8 @@ void GameMainLoop()
 				else arr[i] = ' ';
 			}
 
-			/* Create the food - place '+' on a random coordinates different than the snake coordinates */
-			if (newFood)        //이동 한계치 초과시 음식 재생성 구간 및 음식 포지션 설정(뱀과의 위치에서 일정하게 떨어져야지 생성됨)
+			/*음식을 생성하는 부분 좌표중 +부분에 생성, 이동 한계치 초과시 음식 재생성 구간 및 음식 포지션 설정(뱀과의 위치에서 일정하게 떨어져야지 생성됨) */
+			if (newFood)
 
 			{
 				CheckFoodCoord = 0;
@@ -1047,7 +1046,7 @@ void GameMainLoop()
 
 			{
 				CheckItemCoord = 0;
-				selectItem = rand() % 5; // 아이템 랜덤으로 선택
+				selectItem = rand() % 6; // 아이템 랜덤으로 출력 하기 위해 난수생성
 				for (;;)
 				{
 					item_testX = 1 + rand() % (arraySizeX - 2);
@@ -1065,14 +1064,14 @@ void GameMainLoop()
 				newItem = 0;
 			}
 
-			/* Check snake coordinates for food for impact or walls - for food -> increase snake_size +1; - for impact and walls -> Dead = 1 */
+			/* 스네이크 벽충돌및 음식충돌 검사(음식충돌시 스네이크 길이+1) dead=1이 될시 사망처리 */
 			for (i = 0; i < snakeSize; i++)           //충돌 체크
 			{
-				/* food check 음식과 충돌시*/
+				/* 음식과 충돌체크*/
 				if ((snakePos[2 * i] == foodPos[0]) && (snakePos[2 * i + 1] == foodPos[1]))
 				{
 					newFood = 1;
-					/* the snake cannot be longer than 25 elements. */
+					//스네이크 길이 최대치 25이상x
 					if (snakeSize < 50) snakeSize++;                         // 스네이크 길이 증가
 					izqdeGolemiq = 1;
 					if (INCREASE_SPEED_ON_EVERY_FOOD && (Speed < 40))Speed++;
@@ -1086,15 +1085,14 @@ void GameMainLoop()
 					switch (selectItem)
 					{
 					case 0: //△ : 스피드 업
-
-						put(0); //itemArray[]에 번호로 추가
+						if (Speed < 40) Speed += 2;
 						break;
 					case 1: //▽ : 스피드 다운
 						if (Speed < 40 && Speed >0) Speed -= 2;
 						break;
 					case 2: //● : 지렁이 길이 +1
-
-						put(2); //itemArray[]에 번호로 추가
+						if (snakeSize < 50)
+							snakeSize++;
 						break;
 					case 3: //○ : 지렁이 길이 -1
 						if (snakeSize < 50 && snakeSize>0)
@@ -1102,12 +1100,15 @@ void GameMainLoop()
 						break;
 					case 4: //★ : 무적
 						shieldItem = 1;
-						put(4); //itemArray[]에 번호로 추가
+						break;
+					case 5: //■ : 벽
+						lifeCount--;
+						SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 						break;
 					}
 
 				}
-				/* wall check 벽돌과 충돌시*/
+				/* 벽과충돌체크*/
 				if (!izqdeGolemiq)
 				{
 					if ((arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '-') || (arr[snakePos[2 * snakeSize - 1] * arraySizeX + snakePos[2 * snakeSize - 2]] == '|'))
@@ -1115,67 +1116,35 @@ void GameMainLoop()
 						if (shieldItem)
 						{
 							shieldItem = 0;
+							snakeDir = 1;
 							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 						}
 						else
 						{
 							lifeCount--;
-							if (lifeCount < 0)
-								Dead = 1;
-							else {
-								lifeScreen(lifeCount);
-								//뱀 위치 랜덤설정하는 코드 복붙
-								//추후 함수로 빼서 호출하기 
-								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
-								fflush(stdin);
-							}
-						}
-					}
-				}
-				else
-				{
-					if ((arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '-') || (arr[snakePos[2 * snakeSize - 3] * arraySizeX + snakePos[2 * snakeSize - 4]] == '|'))
-					{
+							snakeDir = 1;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
 
-						if (shieldItem)
-						{
-							shieldItem = 0;
-							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
-						}
-						else
-						{
-							lifeCount--;
-							if (lifeCount < 0)
-								Dead = 1;
-							else {
-								lifeScreen(lifeCount);
-								//뱀 위치 랜덤설정하는 코드 복붙
-								//추후 함수로 빼서 호출하기 
-								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
-								fflush(stdin);
-							}
 						}
 					}
 				}
-				/* snake self-impact check 지렁이가 자신의 몸에 충돌 하는지 검사하는 부분  */
+				/* 지렁이가 자신의 몸에 충돌 하는지 검사하는 부분  */
 				if (i != (snakeSize - 1))
 				{
 					if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
 					{
 						lifeCount--;
-						if (lifeCount < 0)
-							Dead = 1;
-						else {
-							lifeScreen(lifeCount);
-							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
-							fflush(stdin);
-						}
+						snakeDir = 1;
+						SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+
+
 					}
 				}
 			}
-
-			/* Calculate new snake depending on the Dir choosed by user. move the array */
-			/* move array - food condition */
+			if (lifeCount < 0)
+				Dead = 1;
+			/* snakedir 값 변경시 초기 지렁이 이동방향 설정가능 */
+			/* 스네이크 이동 및 음식 좌표 */
 			if (izqdeGolemiq)
 			{
 				for (i = snakeSize; i > 1; i--)
@@ -1188,7 +1157,7 @@ void GameMainLoop()
 				if (snakeDir == 3) { snakePos[0] = snakePos[2] + 1; snakePos[1] = snakePos[3]; } // move left
 				if (snakeDir == 4) { snakePos[0] = snakePos[2];      snakePos[1] = snakePos[3] - 1; } // move down
 			}
-			/* move array - dir condition */
+			/* snakedir값에 따른 스네이크 이동 */
 			for (i = 0; i < snakeSize - 1; i++)
 			{
 				snakePos[2 * i] = snakePos[2 * i + 2];
@@ -1200,18 +1169,19 @@ void GameMainLoop()
 			if (snakeDir == 3) { snakePos[2 * snakeSize - 2] = snakePos[2 * snakeSize - 4] - 1; snakePos[2 * snakeSize - 1] = snakePos[2 * snakeSize - 3]; } // move left
 			if (snakeDir == 4) { snakePos[2 * snakeSize - 2] = snakePos[2 * snakeSize - 4];      snakePos[2 * snakeSize - 1] = snakePos[2 * snakeSize - 3] + 1; } // move down
 
-																																								  /* Create the snake */
+																																								  /* 뱀출력 */
 			for (i = 0; i < snakeSize; i++)
 			{
 				arr[snakePos[2 * i + 1] * arraySizeX + snakePos[2 * i]] = '*';  // 뱀 모양
 			}
 
-			/* Put the food on the matrix */
+			/*음식 좌표(배열)값 배정 */
 			if (foodPos[0] == 0 && foodPos[1] == 0)
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '-';
 			else
 				arr[foodPos[1] * arraySizeX + foodPos[0]] = '+';
 
+			/*아이템 좌표(배열)값 배정 */
 			switch (selectItem)
 			{
 			case 0: //△ : 스피드 업
@@ -1229,11 +1199,13 @@ void GameMainLoop()
 			case 4: //★ : 무적
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '!';
 				break;
+			case 5: //■ : 벽
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '1';
+				break;
 			}
-
-			//system("cls");
 			gotoxy(0, 0);
-			/* print the matrix with the snake and the food*/
+
+			//게임판 그리기
 			for (i = 0; i < arraySizeX; i++)
 			{
 				void hidecursor();
@@ -1243,7 +1215,6 @@ void GameMainLoop()
 					if (arr[i * arraySizeX + j] == '-')
 					{
 						printf("■");
-						//j++;
 					}
 					else if (arr[i * arraySizeX + j] == '|')
 					{
@@ -1281,13 +1252,24 @@ void GameMainLoop()
 					{
 						printf("★");
 					}
-					//   printf("%c", arr[i * arraySizeX + j]);
+					else if (arr[i * arraySizeX + j] == '1') //★ : 무적
+					{
+						printf("■");
+					}
 				}
 				printf("\n");
 			}
+			switch (lifeCount)
+			{
+			case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
+			case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
+			case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
+			case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
+			default: break;
+			}
 
 
-			/* if condition Dead is satisfied -> break  키보드로 뱀 이동*/
+			/* 죽음시 break로 탈출,키보드로 뱀 이동*/
 			Key = 0;
 			if (Dead) break;
 			if (NeedEscape - snakeSize + 3 == 0)
@@ -1323,7 +1305,7 @@ void GameMainLoop()
 				Key = 0;
 				while (1)
 				{
-					fflush(stdin);
+					_getch();
 					if (_kbhit())
 					{
 						Key = _getch();
@@ -1331,21 +1313,20 @@ void GameMainLoop()
 					if (Key == 27) break;
 				}
 			}
-			/* 아이템 사용 시 get 함수 호출 */
+			/* 아이템 사용 */
 			if (Key == 'q' || Key == 'Q')
 			{
-				get(Speed, snakeSize);
+				get();
 			}
 
 			if (snakeDir != CurrentDir)
 			{
-				/* if the current direction is left -> we cannot choose right ...*/
+				/*값에따라 반대쪽 이동제한 ex)오른쪽 이동중이면 반대편인 왼쪽으로 이동불가*/
 				if (snakeDir == 2 && CurrentDir == 4) snakeDir = 4;
 				if (snakeDir == 1 && CurrentDir == 3) snakeDir = 3;
 				if (snakeDir == 4 && CurrentDir == 2) snakeDir = 2;
 				if (snakeDir == 3 && CurrentDir == 1) snakeDir = 1;
 			}
-			fflush(stdin);
 			CurrentDir = snakeDir;
 			i++;
 		}
@@ -1373,38 +1354,7 @@ int limitFoodByStage(int stageNum) {
 	}
 	return foodCount;
 }
-void lifeScreen(int lifeCount) {
-	switch (lifeCount)
-	{
-	case 0: YELLOW gotoxy(42, 3); printf("■  ■  ■  ■"); break;
-	case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
-	case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
-	case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
-	default: break;
-	}
-	gotoxy(42, 0);
-	printf("■■■■■■■");
-	gotoxy(42, 1);
-	printf("■ L I F E  ■");
-	gotoxy(42, 2);
-	printf("■■■■■■■");
-	gotoxy(42, 4);
-	printf("■■■■■■■");
 
-}
-void printState(int state) {
-	switch (state)
-	{
-		//case 0: gotoxy(42, 9); printf("목숨 -1 되었습니다.");  break;
-		//case 0: gotoxy(42, 9); printf("△ : 스피드 업");  break;
-		//case 1: gotoxy(42, 9); printf("▽ : 스피드 다운");  break;
-		//case 2: gotoxy(42, 9); printf("● : 지렁이 길이 +1");  break;
-		//case 3: gotoxy(42, 9); printf("○ : 지렁이 길이 -1");  break;
-		//case 4: gotoxy(42, 9); printf("◑ : 먹이 먹을 시 +2");  break;
-		//case 5: gotoxy(42, 9); printf("★ : 무적");  break;
-		//default: break;
-	}
-}
 void ItemScreen()
 {
 	gotoxy(42, 11);
@@ -1489,7 +1439,7 @@ void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int
 }
 int main()
 {
-	GameMainLoop();
+
 	StartMenu();
 	_getch();
 	return 0;
