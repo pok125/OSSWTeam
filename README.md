@@ -51,35 +51,55 @@ Windows 10  ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo
 
 
 ## How to play
-1) 
-Use followed keys to move pacman for eating dot and running away from the ghost!
+1) 게임 메인 창에서 게임시작 클릭
 
-* -w : move pacman in current direction
+2) 스토리 보드 넘기기
 
-* -s : rotate pacman to back
+3) 키보드 화살표 키를 사용하여 지렁이 움직이기
 
-* -d : rotate pacman to right
+4) 지렁이 일정 길이 이상 시 다음 스테이지로 전환 (스테이지별로 일정길이 증가로 난이도 조절)
 
-* -a : rotate pacman to left
+5) 2탄부터 AI 지렁이 생성(빨간색으로 전환 시 쫒아오므로 유의!)
 
-* space : restart the game
+6) 먹이 일정개수 이상 생성되지 않으므로 유의! (스테이지별로 일정개수 감소로 난이도 조절)
 
-* ESC : exit the game
 
-The dot is 1 point for each dot. You'll win if you eat all the dot.
+아이템 설명 
+* ♤ : 먹이 ->먹으면 지렁이 길이 +1
+
+* @ : 움직이는 AI 지렁이 (2탄부터 등장)
+
+* △,0 : 스피드 업 (Q 입력 시 사용 -> 지렁이 스피드 +2)
+
+* ▽ : 스피드 다운 -> 먹은 즉시 지렁이 스피드 -2
+
+* ●,2 : 지렁이 길이 증가 (Q 입력 시 사용 -> 지렁이 길이 +1)
+
+* ○ : 지렁이 길이 감소 -> 먹은 즉시 지렁이 길이 -1
+
+* ★,4 : 무적 (Q 입력 시 사용 -> 벽충돌 한번 무효화)
+
+* ■ : 벽 -> 충돌 시 즉시 생명 -1
+
+* ♬ : 생명 추가 -> 생명 3 이하일 경우 먹은 즉시 생명 +1
+
 
 ## Original project
 https://github.com/astral2156/Games-Snake
 
 ## How to contribute
+
 git bash를 사용한 기여 방법 
 1) 프로젝트를 fork 한다.
+
 2) git bash 프로그램 실행 후 저장소 clone
+
 3) .git 파일 생성 확인 후 Games-Snake.c 파일 수정
+
 4) remote 저장소로 pull request 요청
 
-Contributer's Infomation
 
+Contributer's Infomation
 **이광호 (Team leader)**  
 
 * <pokljh0411@naver.com>
