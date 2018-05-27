@@ -15,29 +15,30 @@
 
 ## Execution screen
 <p align="center">
-<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=550 height=500></img>
-<a href="https://youtu.be/BbxKEIPWkfY">
-<img src="https://cloud.githubusercontent.com/assets/26589887/26737351/a8c58fcc-4804-11e7-87e5-db4c47cc8818.png"  height=500></img>
-</a>
+<img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=700 height=500></img>
+
 </p>
-Pacman is a game of eating all the dot while running away from the ghost.
+
 
 ## License
-Open-source under Apache 2.0 license. [Follows Apach3.0]
-(#https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29)
+Open-source under Apache 2.0 license. [Follows Apach2.0]
+(https://tldrlegal.com/license/apache-license-2.0-%28apache-2.0%29)
 
 
 ## Execution environment
-It works in compiler C++11. (If you use Visual Studio, you must use Visual Studio 2011 or later.)
+C언어 기반의 콘솔응용프로그램 (Visual Studio 2017)에서 개발 
+Windows 10  ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo/vs2017-system-requirements-vs))
 
-We use Windows 7 ([Visual Studio 2013](https://msdn.microsoft.com/library/dd831853(v=vs.120).aspx)) & Windows 10 ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo/vs2017-system-requirements-vs)) & Mac OS X ([Xcode](https://developer.apple.com/xcode/))
+
 
 ## How to execute
-Download all the files and put it on your project and include the libraries.
+1) 프로젝트를 fork 한다. -> git clone 을 통해 local 저장소에서 수정 및 실행 가능
 
-Please refer to the [User Guide](https://github.com/ekdud014/OSS_pacman/wiki/User-Guide) for details.
+2) clone or download 버튼 클릭 -> zip 파일로 local 저장소에 다운 받아 수정 및 실행 가능 
+
 
 ## How to play
+1) 
 Use followed keys to move pacman for eating dot and running away from the ghost!
 
 * -w : move pacman in current direction
@@ -55,31 +56,38 @@ Use followed keys to move pacman for eating dot and running away from the ghost!
 The dot is 1 point for each dot. You'll win if you eat all the dot.
 
 ## Original project
-https://github.com/patriciateroltolsa/Pacman
+https://github.com/astral2156/Games-Snake
 
 ## How to contribute
-- Fork this project.
-- Create your branch name prefix_function&num_youname (refer issue#30)
-- Pull requests us! 
+git bash를 사용한 기여 방법 
+1) 프로젝트를 fork 한다.
+2) git bash 프로그램 실행 후 저장소 clone
+3) .git 파일 생성 확인 후 Games-Snake.c 파일 수정
+4) remote 저장소로 pull request 요청
 
-Contact us here.
+Contributer's Infomation
 
-**Dayoung Park (Team leader)**  
+**이광호 (Team leader)**  
 
-* <ekdud014@naver.com>
-* https://github.com/ekdud014
+* <pokljh0411@naver.com>
+* https://github.com/pok125
 
-**Sojeong Lee**
+**김예지**
 
-* <angel5164312@naver.com>
-* https://github.com/SojeongLee
+* <dbvlfflsk7@naver.com>
+* https://github.com/yeji0092
 
-**Seungyeon Lee**
+**김덕영**
 
-* <yeondiary@gmail.com>
-* https://github.com/Seungyeon-Lee
+* <astral2156@naver.com>
+* https://github.com/astral2156
 
-**Yeji Rha** 
+**김상훈** 
+
+* <raccoon1234@naver.com>
+* https://github.com/raccoongod
+
+**노형섭** 
 
 * <qpab7722@gamil.com>
 * https://github.com/qpab7722
