@@ -13,7 +13,7 @@
  운영에 관련된 FAQ (FAQ)
  SW 변경 사항 (CHANGE)
  소스코드 저작권 표시 (LICENSE)
-- [실행 화면](#실행 화면)
+- [실행 화면](#)
 - [라이센스](#license)
 - [개발 환경](#execution-environment)
 - [게임실행 방법](#how-to-play)
