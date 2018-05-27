@@ -391,8 +391,8 @@ void StoryScreen()
 /* 아이템 목록 관련 큐 추가 */
 void init_list()// init 함수로 재시작 시 초기화
 {
-	rear = 3;
-	front = 3;
+	rear = 0;
+	front = 0;
 }
 void put(int k) // itemArray 큐에 넣음
 {
@@ -473,7 +473,7 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 				// 몇이 들어갔는지 확인용 printf("%d", itemArray[front]);
 			}
 		}
-		else if (3< itemArray[front]<5) // 왜인지 에러
+		else if (3< itemArray[front]<5)
 		{
 			if (snakeSize < 50)
 			{
@@ -481,11 +481,18 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 				printf("효과 : 나는 무적이다!!");
 			}
 		}
+		else
+		{
+
+		}
 
 		front += 1;
 	}
-	//다시 바뀐 배열을 프린트함
+	else
+	{
 
+	}
+	//다시 바뀐 배열을 프린트함
 	if (rear - front == 2)
 	{
 		gotoxy(48, 18);
@@ -513,8 +520,6 @@ void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 �
 		gotoxy(48, 14);
 		printf(" ");
 	}
-
-
 }
 void Gameover()
 {
