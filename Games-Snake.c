@@ -1097,7 +1097,7 @@ void GameMainLoop()
 
 			{
 				CheckItemCoord = 0;
-				selectItem = rand() % 6; // 아이템 랜덤으로 출력 하기 위해 난수생성
+				selectItem = rand() % 7; // 아이템 랜덤으로 출력 하기 위해 난수생성
 				for (;;)
 				{
 					item_testX = 1 + rand() % (arraySizeX - 2);
@@ -1154,6 +1154,17 @@ void GameMainLoop()
 						shieldItem = 1;
 						put(4); //itemArray[]에 번호로 추가
 						break;
+					case 5: //■ : 벽
+						lifeCount--;
+						SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						break;
+					case 6://♬ : 목숨 +1
+						if (lifeCount<3)
+						{
+							lifeCount++;
+						}
+						break;
+
 					}
 
 				}
@@ -1258,7 +1269,11 @@ void GameMainLoop()
 			case 5: //■ : 벽
 				arr[itemPos[1] * arraySizeX + itemPos[0]] = '1';
 				break;
+			case 6: //♬ : 목숨 +1
+				arr[itemPos[1] * arraySizeX + itemPos[0]] = '2';
+				break;
 			}
+
 			gotoxy(0, 0);
 
 			//게임판 그리기
@@ -1323,9 +1338,13 @@ void GameMainLoop()
 					{
 						printf("★");
 					}
-					else if (arr[i * arraySizeX + j] == '1') //★ : 무적
+					else if (arr[i * arraySizeX + j] == '1') //■ : 벽돌
 					{
 						printf("■");
+					}
+					else if (arr[i * arraySizeX + j] == '2') //♬ : 생명 +1
+					{
+						printf("♬");
 					}
 				}
 				printf("\n");
