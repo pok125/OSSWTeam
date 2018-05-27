@@ -22,7 +22,7 @@
 #define UP 72
 #define DOWN 80
 /////////////////////////////////
-#define MAX 100
+#define MAX 50
 /////////////////////////////////
 
 ///////////////////////함수선언부///////////////////////////
@@ -41,10 +41,10 @@ void Gamesetting();	//게임 기본세팅함수
 void printState(int state); //상태 출력 함수
 void init_list(); //item 리스트 재실행시 초기화 
 void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int snakeDir); //지렁이 위치 설정 함수
-																							////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
 
-																							///////////////전역변수부///////////////
+///////////////전역변수부///////////////
 int PCX = 2;	//주인공 좌표X
 int PCY = 4;	//주인공 좌표Y
 int second = 0;	//초받아오는 변수
@@ -53,7 +53,9 @@ int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
 int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
-				  /////////////////////////////////////////
+int Speed;
+int snakeSize = 3;
+/////////////////////////////////////////
 
 void Clock()
 {
@@ -112,7 +114,7 @@ void PCKeyInput() {
 void consolesize()
 {
 	system("title SewerEscape");   //실행창 이름 바꾸기
-	system("mode con:cols=100 lines=30");
+	system("mode con:cols=100 lines=30");	//콘솔창 크기 조절
 }
 
 
@@ -175,8 +177,7 @@ void StartMenu()
 
 	Sleep(1000);
 	RED
-		//	gotoxy(0, 0);
-		printf("                                                                                              \n");
+	printf("                                                                                              \n");
 	printf("                                                                                              \n");
 	printf("      ■■■■     ■             ■        ■■■■■■        ■■■■■ ■       ■■■■      \n");
 	printf("                   ■           ■  ■                ■        ■         ■                     \n");
@@ -223,12 +224,12 @@ void StartMenu()
 			printf("");
 			key = _getch();
 			printf(" ");
-			switch (key)
+			switch (key) //방향키로 이동
 			{
-			case 72:     //방향키로 바꿔야함
+			case 72:    
 				if (y > 18) y--;
 				break;
-			case 80:     //얘도
+			case 80:     
 				if (y < 20) y++;
 				break;
 			case 13:
@@ -250,9 +251,7 @@ void StartMenu()
 					Sleep(1000);
 				}
 				system("cls");
-				//handlecount = 1;
 				StoryScreen();
-				////////////////////////////////////////게임 시작되야되는 부분
 				break;
 			case 1:
 				gotoxy(53, 23);
@@ -295,7 +294,7 @@ void StoryScreen()
 			gotoxy(4, 15);
 			printf("너 길가다가 하수구에 빠진거 기억 안나?\n");
 			gotoxy(4, 16);
-			printf("그러길래 술 적당히 마시지 그랬어...;; ");
+			printf("술 적당히 마시지 그랬어...;; ");
 			gotoxy(4, 17);
 			printf("하수구를 나가려면 게임을 클리어 해야해! ");
 
@@ -352,7 +351,7 @@ void StoryScreen()
 			gotoxy(4, 15);
 			printf("싫다고? 그럼 죽어!\n");
 			gotoxy(4, 16);
-			printf("농담이고 싫어도 해야해!\n");
+			printf("농담이고 싫어도 나가려면 해야해!\n");
 			gotoxy(4, 17);
 			printf("게임에 대해서 궁금하면 나를 찾아오면 알려주도록 할게\n");
 			gotoxy(4, 18);
@@ -368,9 +367,8 @@ void StoryScreen()
 		}
 	}
 
-	if (PrintCount == 5) {
-
-		//	system("cls");
+	if (PrintCount == 5)
+	{
 		MainStation();
 	}
 }
@@ -432,16 +430,41 @@ void put(int k) // itemArray 큐에 넣음
 
 	}
 }
-void get() // itemArray 큐에서 빼냄
+void get() // itemArray 큐에서 빼냄, 사용하게 하고, 리스트에서 아이템 지움
 {
-	if (rear - front < 4) //계속적으로 쓰지 못하도록 3이내
+	if (rear - front < 4) // 아이템이 없는데도 계속적으로 쓰지 못하도록 3 이내
 	{
 		gotoxy(48, 22);
-		printf("get : %d", itemArray[front]);
+		printf("get : %d", itemArray[front]); //현재 사용되는 아이템
 
+		if (itemArray[front] <1)
+		{
+			if (Speed < 40)
+			{
+				Speed += 2;
+				gotoxy(46, 21);
+				printf("효과 : 스피드 업!!");
 
-		//해당 아이템 효과 발동
-
+			}
+		}
+		else if (1< itemArray[front] < 3)
+		{
+			if (snakeSize < 50)
+			{
+				snakeSize += 1;
+				gotoxy(46, 21);
+				printf("효과 : 지렁이 길이 +1!!");
+				printf("%d", itemArray[front]);
+			}
+		}
+		else if (3< itemArray[front]<5) // 왜인지 에러
+		{
+			if (snakeSize < 50)
+			{
+				gotoxy(46, 21);
+				printf("효과 : 나는 무적이다!!");
+			}
+		}
 
 		front += 1;
 	}
@@ -474,14 +497,6 @@ void get() // itemArray 큐에서 빼냄
 		gotoxy(48, 14);
 		printf(" ");
 	}
-	/*
-	gotoxy(48, 14);
-	printf("%d", itemArray[front+1]); //1번 템
-	gotoxy(48, 16);
-	printf("%d", itemArray[front]);
-	gotoxy(48, 18);
-	printf("%d", itemArray[front-1]);
-	*/
 
 
 }
@@ -856,7 +871,6 @@ void GameMainLoop()
 	char *arr = NULL;
 	int CheckFoodCoord = 0;
 	int CheckItemCoord = 0;
-	//	char unused[30];
 	int arraySizeX = 16;
 	int arraySizeY = 16;
 	int newFood = 1;
@@ -869,7 +883,6 @@ void GameMainLoop()
 	int item_testX = 0;
 	int item_testY = 0;
 	int snakePos[100];  //x,y pos for 50 snake elements. If the snake is getting bigger -> malloc for new 10 elements
-	int snakeSize = 3;
 	int snakeDir = 1; /* 1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu 스네이크가 출발하는 방향 초기설정*/
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
@@ -877,7 +890,7 @@ void GameMainLoop()
 	int lifeCount;
 	int foodCount;
 	int NeedEscape;		//탈출에 필요한 먹이갯수
-	int Speed;
+
 
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
