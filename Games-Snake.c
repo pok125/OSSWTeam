@@ -40,10 +40,10 @@ void Clock();	//시스템 시간받아오는 함수
 void Gamesetting();	//게임 기본세팅함수
 void init_list(); //item 리스트 재실행시 초기화 
 void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int snakeDir); //지렁이 위치 설정 함수
-																							////////////////////////////////////////////////////////////
+COORD GetCurrentCursorPos();//현재좌표 받아오기
 
-
-																							///////////////전역변수부///////////////
+							/////////////전역변수부///////////////////////
+int NPCX, NPCY;
 int PCX = 2;	//주인공 좌표X
 int PCY = 4;	//주인공 좌표Y
 int second = 0;	//초받아오는 변수
@@ -51,9 +51,11 @@ int limitFoodByStage(int stageNum); //스테이지별 먹이 개수 제한 함�
 int itemArray[MAX] = { 4 }; //item 입력 받는 리스트
 int front = 3;
 int rear = 3;
-int stageNum = 1; //스테이지 구별 변수 //추후 스테이지 개발자가 생성 및 구현 
+
+int stageNum = 3; //스테이지 구별 변수 
 int Speed;
 int snakeSize = 3;
+
 /////////////////////////////////////////
 
 void Clock()
@@ -67,6 +69,22 @@ void Gamesetting()
 
 	Clock();
 	CursorHide();
+}
+COORD GetCurrentCursorPos()
+{
+
+	COORD curPoint;
+
+	CONSOLE_SCREEN_BUFFER_INFO curInfo;
+
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+
+	curPoint.X = curInfo.dwCursorPosition.X;
+
+	curPoint.Y = curInfo.dwCursorPosition.Y;
+
+	return curPoint;
+
 }
 void PCKeyInput() {
 	int key;
@@ -553,7 +571,14 @@ void Gameover()
 	Sleep(100);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 	Sleep(100);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	Sleep(100);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+
 	Sleep(1000);
 	WHITE
 		char key;
@@ -590,7 +615,6 @@ void Gameover()
 void MainStation()
 {
 	system("cls");
-	int NPCX, NPCY;
 	int arraySizeY = 10;
 	int arraySizeX = arraySizeY;
 	char *arr = NULL;
@@ -598,7 +622,8 @@ void MainStation()
 	int DetectHelper = 0;
 	int SBCheck = 0;
 
-
+	PCX = 2;	//주인공 좌표X
+	PCY = 4;	//주인공 좌표Y
 	NPCX = NPCY = 10;
 
 
@@ -753,17 +778,19 @@ void MainStation()
 			else if (stageNum == 2)
 			{
 				gotoxy(22, 1);
-				printf("첫번째는 쉽지?\n");
-				gotoxy(22, 1);
 				printf("이제 세번만 더하면\n");
-				gotoxy(22, 2);
+				gotoxy(22, 1);
 				printf("탈출 할수있어\n");
+				gotoxy(22, 2);
+				printf("하지만 녀석을 화나게 했어\n");
 				gotoxy(22, 3);
-				printf("갈수록 어려워지니 조심해");
+				printf("@ 이녀석을 조심하라구");
 				gotoxy(22, 4);
-				printf("아래에있는 ★에 가면");
+				printf("빨간색으로 변하면");
 				gotoxy(22, 5);
-				printf("다음 게임을 할수있어!");
+				printf("널 따라오는거니");
+				gotoxy(22, 6);
+				printf("조심하도록해!");
 				TalkCheck = 1;
 				SBCheck = 1;
 			}
@@ -774,13 +801,13 @@ void MainStation()
 				gotoxy(22, 1);
 				printf("잘 해내었구나!\n");
 				gotoxy(22, 2);
-				printf("지금 처럼 계속\n");
+				printf("라이프갯수가 줄어들었어\n");
 				gotoxy(22, 3);
-				printf("하면 탈출 할수 있을거야");
+				printf("보다 신중하길 바래");
 				gotoxy(22, 4);
-				printf("★에 가면 게임을 할수있어");
+				printf("@ 이녀석 화나서 예민해졌어");
 				gotoxy(22, 5);
-				printf("죽지 않게 조심해!");
+				printf("가까이 가지 않도록 조심해!");
 				TalkCheck = 1;
 				SBCheck = 1;
 			}
@@ -793,11 +820,11 @@ void MainStation()
 				gotoxy(22, 2);
 				printf("그래도 나가야겠지?\n");
 				gotoxy(22, 3);
-				printf("아래에있는 ★에 가면");
+				printf("마지막은 라이프가 없어");
 				gotoxy(22, 4);
-				printf("탈출을 위한 게임할수있어");
+				printf("한번의 기회뿐이니");
 				gotoxy(22, 5);
-				printf("마지막이니 죽지마!");
+				printf("죽지말고 신중히해");
 				TalkCheck = 1;
 				SBCheck = 1;
 			}
@@ -870,8 +897,8 @@ void GameMainLoop()
 	char *arr = NULL;
 	int CheckFoodCoord = 0;
 	int CheckItemCoord = 0;
-	int arraySizeX = 16;
-	int arraySizeY = 16;
+	int arraySizeX;
+	int arraySizeY;
 	int newFood = 1;
 	int NoNewGame = 0;
 	int foodPos[2];
@@ -886,11 +913,19 @@ void GameMainLoop()
 	int newItem = 1;
 	int selectItem = 0; // 아이템 생성시 선택된 아이템
 	int shieldItem = 0; // 무적아이템 유무확인 변수
+	int GameStartCheck = 0;
 	int lifeCount;
 	int foodCount;
 	int NeedEscape;		//탈출에 필요한 먹이갯수
 
+	int lifeonecheck; //라이프소진후 1초간무적
+	COORD curPos;
 
+	int CloseCheck = 0;	//npc와 가까운지 체크
+	int StartRandom;	//npc움직임 랜덤
+	int MoveLimit = 0;	//npc랜덤 하게 움직임
+	int timecheck = 0;	//방향 움직임 시간체크
+	int NPCDA = 0;		//NPC 감지거리
 	arraySizeY = 20;
 	arraySizeX = arraySizeY;
 
@@ -901,6 +936,7 @@ void GameMainLoop()
 		NeedEscape = 5;
 		Speed = 3;
 		z = 24;
+		NPCDA = 0;
 	}
 	else if (stageNum == 2)
 	{
@@ -909,22 +945,28 @@ void GameMainLoop()
 		NeedEscape = 7;
 		Speed = 5;
 		z = 20;
+
+		NPCDA = 8;
 	}
 	else if (stageNum == 3)
 	{
-		lifeCount = 4; //목숨 개수(스테이지별 초기화)
+		lifeCount = 3; //목숨 개수(스테이지별 초기화)
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 9;
 		Speed = 7;
 		z = 16;
+		NPCDA = 10;
 	}
 	else if (stageNum == 4)
 	{
-		lifeCount = 4; //목숨 개수(스테이지별 초기화)
+		lifeCount = 1; //목숨 개수(스테이지별 초기화)
+
 		foodCount = 0; //스테이지 별 먹이 수 제한 
 		NeedEscape = 12;
 		Speed = 9;
 		z = 14;
+		NPCDA = 12;
+
 	}
 
 	ItemScreen();
@@ -967,8 +1009,10 @@ void GameMainLoop()
 	printf("■■■■■■■");
 
 	while (1)	//게임 사이클 시작부분
-	{ 
+	{
 
+
+		lifeonecheck = 0;
 
 		Dead = 0;
 		CurrentDir = 0;
@@ -984,8 +1028,17 @@ void GameMainLoop()
 
 		while (1)
 		{
+			if (lifeonecheck == 1)
+			{
+				if (second % 2 == 0)
+				{
+					lifeonecheck = 0;
+				}
+			}
 
-
+			int C_arrX[MAX];
+			int C_arrY[MAX];
+			int c = 0;
 			z--;
 			createItem--;
 
@@ -1000,7 +1053,7 @@ void GameMainLoop()
 			izqdeGolemiq = 0;
 			CurrentDir = snakeDir;
 
-			/* Create the frame arraySizeX * arraySizeY */
+
 			for (i = 0; i < arraySizeX * arraySizeY; i++)  //맵 가장자리 생성
 			{
 				if (i < arraySizeX) arr[i] = '-';             //맨 위쪽 벽
@@ -1102,8 +1155,13 @@ void GameMainLoop()
 						shieldItem = 1;
 						break;
 					case 5: //■ : 벽
-						lifeCount--;
-						SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						if (lifeonecheck == 0)
+						{
+							lifeCount--;
+							snakeDir = 1;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						}
+
 						break;
 					}
 
@@ -1121,9 +1179,14 @@ void GameMainLoop()
 						}
 						else
 						{
-							lifeCount--;
-							snakeDir = 1;
-							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+
+							if (lifeonecheck == 0)
+							{
+								lifeCount--;
+								snakeDir = 1;
+								SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+							}
+
 
 						}
 					}
@@ -1133,14 +1196,16 @@ void GameMainLoop()
 				{
 					if ((snakePos[2 * (snakeSize - 1)] == snakePos[2 * i]) && (snakePos[2 * (snakeSize - 1) + 1] == snakePos[2 * i + 1]))
 					{
-						lifeCount--;
-						snakeDir = 1;
-						SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
-
-
+						if (lifeonecheck == 0)
+						{
+							lifeCount--;
+							snakeDir = 1;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						}
 					}
 				}
 			}
+
 			if (lifeCount < 0)
 				Dead = 1;
 			/* snakedir 값 변경시 초기 지렁이 이동방향 설정가능 */
@@ -1214,11 +1279,21 @@ void GameMainLoop()
 				{
 					if (arr[i * arraySizeX + j] == '-')
 					{
+						if (lifeCount == 0)
+						{
+							YELLOW;
+						}
 						printf("■");
+						WHITE;
 					}
 					else if (arr[i * arraySizeX + j] == '|')
 					{
+						if (lifeCount == 0)
+						{
+							YELLOW;
+						}
 						printf("■");
+						WHITE;
 					}
 					else if (arr[i * arraySizeX + j] == ' ')
 					{
@@ -1227,6 +1302,11 @@ void GameMainLoop()
 					else if (arr[i * arraySizeX + j] == '*') //지렁이 모양 
 					{
 						printf("●");
+						curPos = GetCurrentCursorPos();
+
+						C_arrX[c] = curPos.X;
+						C_arrY[c] = curPos.Y;
+						c++;
 					}
 					else if (arr[i * arraySizeX + j] == '+') //♤ : 먹이 
 					{
@@ -1267,6 +1347,152 @@ void GameMainLoop()
 			case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
 			default: break;
 			}
+
+			/////////////////적 캐릭터 구현부///////////////////////////////////
+			if (stageNum > 1)
+			{
+				timecheck = second;
+
+				if (second % 2 == 0)
+				{
+					timecheck++;
+				}
+				if (GameStartCheck == 0)
+				{
+					gotoxy(NPCX, NPCY);
+					printf("＠");
+				}
+				if (MoveLimit == 0)
+				{
+					srand((unsigned int)time(NULL));
+					StartRandom = (rand() % 4) + 1;
+					MoveLimit = 1;
+				}
+				else if (timecheck > 5)
+				{
+					MoveLimit = 0;
+					timecheck = 0;
+				}
+
+				if (curPos.X == NPCX && NPCY - curPos.Y <= NPCDA && NPCY - curPos.Y >= 0) //up
+				{
+					CloseCheck = 1;
+
+				}
+				else if (curPos.X == NPCX && curPos.Y - NPCY <= NPCDA && curPos.Y - NPCY >= 0) //down
+				{
+					CloseCheck = 1;
+				}
+				else if (curPos.Y == NPCY && curPos.X - NPCX <= NPCDA * 2 && curPos.X - NPCX >= 0)//right
+				{
+					CloseCheck = 1;
+				}
+				else if (curPos.Y == NPCY && NPCX - curPos.X <= NPCDA * 2 && NPCX - curPos.X >= 0)//left
+				{
+					CloseCheck = 1;
+				}
+				else
+				{
+					gotoxy(NPCX, NPCY);
+					WHITE;
+					printf("＠");
+					CloseCheck = 0;
+
+					if (StartRandom == 1)	//위
+					{
+
+						if (NPCY == 1)
+						{
+							MoveLimit = 0;
+						}
+						else
+							NPCY--;
+					}
+					else if (StartRandom == 2)	//아래
+					{
+
+						if (NPCY == 18)
+						{
+							MoveLimit = 0;
+						}
+						else
+							NPCY++;
+					}
+					else if (StartRandom == 3)	//오른쪽
+					{
+						if (NPCX == 18)
+						{
+							MoveLimit = 0;
+						}
+						else
+							NPCX += 2;
+
+					}
+					else if (StartRandom == 4)	//왼쪽
+					{
+						if (NPCX == 2)
+						{
+							MoveLimit = 0;
+						}
+						else
+							NPCX -= 2;
+
+					}
+				}
+				if (CloseCheck == 1)
+				{
+
+					gotoxy(NPCX, NPCY);
+					RED;
+					printf("＠");
+					WHITE;
+
+
+
+					if (curPos.X == NPCX && NPCY - curPos.Y <= NPCX && NPCY - curPos.Y >= 0) //up
+					{
+						NPCY--;
+					}
+					else if (curPos.X == NPCX && curPos.Y - NPCY <= NPCX && curPos.Y - NPCY >= 0) //down
+					{
+						NPCY++;
+					}
+					else if (curPos.Y == NPCY && curPos.X - NPCX <= NPCX && curPos.X - NPCX >= 0)//right
+					{
+						NPCX += 2;
+					}
+					else if (curPos.Y == NPCY && NPCX - curPos.X <= NPCX && NPCX - curPos.X >= 0)//left
+					{
+						NPCX -= 2;
+					}
+
+				}
+				for (int i = 0; i < snakeSize; i++)
+				{
+					if (C_arrX[i] == NPCX && C_arrY[i] == NPCY)
+					{
+						if (lifeonecheck == 0)
+						{
+							lifeCount--;
+							snakeDir = 1;
+							NPCX = NPCY = 10;
+							SetCharacterPosition(snakePos, snakeSize, 2, snakeDir);
+						}
+					}
+				}
+			}
+			///////////////////////////////////
+
+
+			switch (lifeCount)
+			{
+			case 0: gotoxy(42, 3); printf("■  ■  ■  ■"); break;
+			case 1: gotoxy(42, 3); printf("■♡■  ■  ■"); break;
+			case 2: gotoxy(42, 3); printf("■♡■♡■  ■"); break;
+			case 3: gotoxy(42, 3); printf("■♡■♡■♡■"); break;
+			default: break;
+			}
+
 
 
 			/* 죽음시 break로 탈출,키보드로 뱀 이동*/
@@ -1437,6 +1663,7 @@ void SetCharacterPosition(int *snakePos, int snakeSize, int direction_snake, int
 		}
 	}
 }
+
 int main()
 {
 
