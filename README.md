@@ -18,15 +18,18 @@
 <img src="http://postfiles11.naver.net/MjAxODA1MjdfMTU1/MDAxNTI3NDA1MzE5OTEy.4CPWlB0iNh7Sv1mJ3IJR2grOYNPhBkukNMn76FfldEMg.oz8PcUD_XSy4b3u491BXy96sIdSfs4bSzPwGuIbdTAsg.PNG.dbvlfflsk7/mainScreen.PNG?type=w2" width=700 height=500></img>
 </br>
 <게임 초기 화면>
+</p>
 
+<p align="center">
 <img src="http://postfiles16.naver.net/MjAxODA1MjdfNzQg/MDAxNTI3NDMwODA0MTc3.2w--SURcR_AmZjLwgn6CLLdaAHR_3S_0QH15rUpcLg4g.jxxzu2xl-gBnIeHZcphEmoWbab8Pk8wc4Hlcl6Kd6WQg.PNG.dbvlfflsk7/story1.PNG?type=w2" width=500 height=500></img>
 </br>
 <게임 스토리 화면>
+</p>
 
+<p align="center">
 <img src="http://postfiles16.naver.net/MjAxODA1MjdfNzQg/MDAxNTI3NDMwODA0MTc3.2w--SURcR_AmZjLwgn6CLLdaAHR_3S_0QH15rUpcLg4g.jxxzu2xl-gBnIeHZcphEmoWbab8Pk8wc4Hlcl6Kd6WQg.PNG.dbvlfflsk7/story1.PNG?type=w2" width=700 height=500></img>
 </br>
 <게임 실행 화면>
-
 </p>
 
 
