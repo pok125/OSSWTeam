@@ -5,6 +5,18 @@
 #include <time.h>
 #include <windows.h>
 
+/*
+Config file:  config.cfg
+content:
+arraySizeX					16 // these two values should be equal
+arraySizeY					16 // no bigger than 16
+StartingDirection			2  // 0 - random.  1 - nadqsno, 2 - nagore, 3 -nalqvo, 4, nadolu 
+snakeSize					5  // no longer than 5;
+IncreaseSpeedOnEveryFood	1
+The config value is opened only if the user choose '0' for the size of the array.
+*/
+
+
 /////////아래 매크로는 텍스트 색깔들을 정의함/////////////////
 #define COL GetStdHandle(STD_OUTPUT_HANDLE)
 #define RED SetConsoleTextAttribute(COL, 0x000c);
