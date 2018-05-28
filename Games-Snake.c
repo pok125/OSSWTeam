@@ -5,6 +5,8 @@
 #include <time.h>
 #include <windows.h>
 
+
+
 /////////아래 매크로는 텍스트 색깔들을 정의함/////////////////
 #define COL GetStdHandle(STD_OUTPUT_HANDLE)
 #define RED SetConsoleTextAttribute(COL, 0x000c);
