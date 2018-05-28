@@ -91,7 +91,7 @@ Windows 10  ([Visual Studio 2017](https://www.visualstudio.com/ko-kr/productinfo
 
 
 ## Original project
-https://github.com/astral2156/Games-Snake
+https://github.com/peperunii/Games-Snake
 
 ## How to contribute
 
