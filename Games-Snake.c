@@ -1,4 +1,17 @@
-﻿#include <stdio.h>
+/*
+ * name : Snake-Games
+ * Team : OSSWTeam (노형섭/ 이광호 / 김예지 / 김상훈 / 김덕영)
+ * autor: peperunii
+ * update : UI, Item, Story, Graphic
+ *
+ * ver1. https://github.com/peperunii/Games-Snake
+ * ver2. https://github.com/pok125/OSSWTeam
+ */
+
+
+
+
+#include <stdio.h>
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
