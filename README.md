@@ -132,7 +132,7 @@ Contributer's Infomation</br>
 
 **노형섭** 
 
-* <qpab7722@gamil.com>
-* https://github.com/qpab7722
+* <qwerty498@naver.com>
+* https://github.com/water498
 
 
